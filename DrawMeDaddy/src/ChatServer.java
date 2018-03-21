@@ -8,18 +8,20 @@ public class ChatServer implements Runnable,Constants{
 	private ServerSocket server;
 	private List<ChatServerThread> clientList = new ArrayList<>();
 	private Thread thread;
+	private int portNumber;
 	
-	public ChatServer() {
-		
+	
+	public ChatServer(int portNumber) {
+		this.portNumber = portNumber;
 	}
 
 	public void setUp() {
 		try {
-			System.out.println("Binding to port: "+PORT_NUMBER+". Please wait.");
-			server = new ServerSocket(PORT_NUMBER);
+			System.out.println("Binding to port: "+portNumber+". Please wait.");
+			server = new ServerSocket(portNumber);
 			System.out.println("Server started: "+server);
 		}catch(Exception e) {
-			System.out.println("Cannot bind to port"+PORT_NUMBER+": "+e.getMessage());
+			System.out.println("Cannot bind to port"+portNumber+": "+e.getMessage());
 		}
 	}
 	
@@ -53,11 +55,21 @@ public class ChatServer implements Runnable,Constants{
 			System.out.println("Error opening client thread: "+e.getMessage());
 		}
 	}
+	
+	private void removeClient(String ipAddress, int ID) {
+		for(ChatServerThread client : clientList) 
+			if(ipAddress.equals(client.getIPAddress()) && ID==client.getID())
+				clientList.remove(client);
+		System.out.println("clientList: "+clientList);
+			
+	}
 
 	public void handle(String ipAddress, int ID, String message) {
-		System.out.println(ipAddress+"/"+ID+": "+message);
+		System.out.println(message);
+		if(message.equals("bye"))
+			removeClient(ipAddress, ID);
 		for(ChatServerThread client: clientList) {
-			client.send(ipAddress+"/"+ID+": "+message);
+			client.send(message);
 		}
 	}
 }

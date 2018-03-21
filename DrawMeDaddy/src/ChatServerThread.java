@@ -11,6 +11,7 @@ public class ChatServerThread extends Thread{
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatServer server;
+	
 	public ChatServerThread(ChatServer chatServer, Socket socket) {
 		this.server = chatServer;
 		this.socket = socket;
@@ -37,7 +38,7 @@ public class ChatServerThread extends Thread{
 			}
 		}
 	}
-
+	
 	public void send(String message) {
 		try {
 			streamOut.writeUTF(message);
@@ -46,4 +47,13 @@ public class ChatServerThread extends Thread{
 			//close client here
 		}
 	}
+	
+	public String getIPAddress() {
+		return ipAddress;
+	}
+	
+	public int getID() {
+		return ID;
+	}
+	
 }

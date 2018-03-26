@@ -11,10 +11,10 @@ Conventions:
 2. Try as much as possilble to Clean Code.<br>
   2a. Variable names and methods should be descriptive. Eg. calculateDistance(Point a, Point b);<br>
   2b. Non-final variables and methods are always in camel case. Eg. int numOfStudents; <br>
-  2c. Constants should always be declared as static final in the Constant class and in UPPER CASE. Use underscores as separators. Eg. static final PI_VALUE;<br>
+  2c. Constants should always be declared as static final in the Constant class and in UPPER CASE. Use underscores as separators. Eg. public static final double PI_VALUE = 3.14;<br>
   
   
-3. Always use the interface of the class in declaration. Eg. List<Student> students = new ArrayList<>();
+3. Always use the interface of the class in declaration. Eg. List&lt;Student&gt; students = new ArrayList<>();
 4. Prefer for-each loops instead of traditional for loops. Eg. for(Student s: students) 
 5. Always implement getters for each variable that you might need in each class. public int getNumOfStudents(){return numOfStudents;}
 6. Make use of the Constant class. All constants must be declared there. To use, just implement the Constants class

@@ -8,10 +8,10 @@ For dev:
 
 Conventions:
 1. In committing, use this format: git commit -m "task accomplished/Signed:Name" eg. git commit -m "Added erase button/Signed:Drew Guiao"
-2. Try as much as possilble to Clean Code.
-  2a. Variable names and methods should be descriptive. Eg. calculateDistance(Point a, Point b);
-  2b. Non-final variables and methods are always in camel case. Eg. int numOfStudents; 
-  2c. Constants should always be declared as static final in the Constant class and in UPPER CASE. Use underscores as separators. Eg. static final PI_VALUE;
+2. Try as much as possilble to Clean Code.<br>
+  2a. Variable names and methods should be descriptive. Eg. calculateDistance(Point a, Point b);<br>
+  2b. Non-final variables and methods are always in camel case. Eg. int numOfStudents; <br>
+  2c. Constants should always be declared as static final in the Constant class and in UPPER CASE. Use underscores as separators. Eg. static final PI_VALUE;<br>
   
   
 3. Always use the interface of the class in declaration. Eg. List<Student> students = new ArrayList<>();

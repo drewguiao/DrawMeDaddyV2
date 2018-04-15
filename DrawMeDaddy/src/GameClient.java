@@ -10,6 +10,5 @@ public class GameClient implements Runnable{
 	
 	public void run() {
 		gui = new DaddyGUI();
-		gui.render();
 	}
 }

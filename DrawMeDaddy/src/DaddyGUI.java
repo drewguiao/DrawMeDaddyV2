@@ -2,6 +2,8 @@ import java.awt.Color;
 import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.MouseListener;
+import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -11,7 +13,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
 
-import com.sun.glass.events.MouseEvent;
 
 public class DaddyGUI {
 	private JFrame frame;
@@ -170,6 +171,8 @@ public class DaddyGUI {
 		this.toolbar.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.toolbar.setBounds(50,550,500,100);
 		
+		this.constructToolbar(this.toolbar);
+		
 		
 		this.mainGameFrame.add(chatPanel);
 		this.mainGameFrame.add(toolbar);
@@ -202,5 +205,65 @@ public class DaddyGUI {
 		
 		panel.add(drawLabel);
 	}
+	
+	public void constructToolbar(JPanel panel) {
+		
+		ArrayList<ToolbarButton> colorButtons = new ArrayList<ToolbarButton>();
+		ArrayList<ToolbarButton> sizeButtons = new ArrayList<ToolbarButton>();
+		
+		panel.setLayout(new GridLayout());
+		panel.setFocusable(true);
+		
+		int colorFlag[] = new int[3];
+		
+		for(int i=0; i<2; i++) colorFlag[i] = 0;
+		colorFlag[0] = 1; colorFlag[2] = 1;
+		
+		int sizeFlag[] = new int[3];
+		for(int i=0; i<2; i++) sizeFlag[i] = 0;
+		sizeFlag[0] = 1; sizeFlag[2] = 1;
+		
+		ToolbarUpdater colorUpdater = new ToolbarUpdater(colorButtons, colorFlag);
+		ToolbarUpdater sizeUpdater = new ToolbarUpdater(sizeButtons, colorFlag);
+		
+		ToolbarButton black = new ToolbarButton("images/toolbarblack.png", "images/toolbarblack_shadow.png", "images/toolbarblack_selected.png", 0, colorUpdater);
+		ToolbarButton red = new ToolbarButton("images/toolbarred.png", "images/toolbarred_shadow.png", "images/toolbarred_selected.png", 1, colorUpdater);
+		ToolbarButton green = new ToolbarButton("images/toolbargreen.png", "images/toolbargreen_shadow.png", "images/toolbargreen_selected.png", 2, colorUpdater);
+		
+		colorButtons.add(black);
+		colorButtons.add(red);
+		colorButtons.add(green);
+		
+		
+		ToolbarButton small = new ToolbarButton("images/toolbarsmall.png", "images/toolbarsmall_shadow.png", "images/toolbarsmall_selected.png", 0, sizeUpdater);
+		ToolbarButton medium = new ToolbarButton("images/toolbarmedium.png", "images/toolbarmedium_shadow.png", "images/toolbarmedium_selected.png", 1, sizeUpdater);
+		ToolbarButton large = new ToolbarButton("images/toolbarlarge.png", "images/toolbarlarge_shadow.png", "images/toolbarlarge_selected.png", 2, sizeUpdater);
+		ToolbarButton delete = new ToolbarButton("images/toolbareraser.png", "images/toolbareraser_shadow.png", "images/toolbareraser_selected.png", 3, null);
+		
+		sizeButtons.add(small);
+		sizeButtons.add(medium);
+		sizeButtons.add(large);
+		
+		black.setState(colorFlag);
+		red.setState(colorFlag);
+		green.setState(colorFlag);
+		
+		small.setState(colorFlag);
+		medium.setState(colorFlag);
+		large.setState(colorFlag);
+		
+		panel.add(black);
+		panel.add(red);
+		panel.add(green);
+		panel.add(small);
+		panel.add(medium);
+		panel.add(large);
+		panel.add(delete);
+	}
+	
+	
+	
+	
+	
 	
 }

@@ -159,19 +159,17 @@ public class DaddyGUI {
 		this.chatPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.chatPanel.setBounds(600,0,200,800);
 		
-		this.constructChatPanel(this.chatPanel);
-		
 		this.drawPanel = new JPanel();
 		this.drawPanel.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.drawPanel.setBounds(0,0,600,800);
-		
-		this.constructDrawPanel(this.drawPanel);
 		
 		this.toolbar = new JPanel();
 		this.toolbar.setBorder(BorderFactory.createLineBorder(Color.black));
 		this.toolbar.setBounds(50,550,500,100);
 		
+		this.constructChatPanel(this.chatPanel);
 		this.constructToolbar(this.toolbar);
+		this.constructDrawPanel(this.drawPanel);
 		
 		
 		this.mainGameFrame.add(chatPanel);
@@ -202,7 +200,9 @@ public class DaddyGUI {
 		JLabel drawLabel = new JLabel(new ImageIcon("images/paper.png"));
 		drawLabel.setBounds(0,0,600,800);
 		
-		
+		DrawArea drawArea = new DrawArea();
+		drawArea.setBounds(0,0,600,500);
+		drawLabel.add(drawArea);
 		panel.add(drawLabel);
 	}
 	
@@ -212,7 +212,7 @@ public class DaddyGUI {
 		ArrayList<ToolbarButton> sizeButtons = new ArrayList<ToolbarButton>();
 		
 		panel.setLayout(new GridLayout());
-		panel.setFocusable(true);
+		//panel.setFocusable(false);
 		
 		int colorFlag[] = new int[3];
 		

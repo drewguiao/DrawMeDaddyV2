@@ -4,12 +4,12 @@ import java.net.Socket;
 
 public class ChatClientThread extends Thread{
 	private Socket socket;
-	private ChatClient chatClient;
+	private GameClient gameClient;
 	private DataInputStream console;
 	
 	
-	public ChatClientThread(ChatClient chatClient, Socket socket) {
-		this.chatClient = chatClient;
+	public ChatClientThread(GameClient gameClient, Socket socket) {
+		this.gameClient = gameClient;
 		this.socket = socket;
 		open();
 		start();
@@ -27,7 +27,7 @@ public class ChatClientThread extends Thread{
 	public void run() {
 		while(true) {
 			try {				
-				chatClient.handle(console.readUTF());
+				gameClient.handle(console.readUTF());
 			}catch(IOException ioe) {
 				System.out.println("Listening error: " + ioe.getMessage());
 			}

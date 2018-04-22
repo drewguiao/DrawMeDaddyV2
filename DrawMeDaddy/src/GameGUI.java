@@ -4,17 +4,21 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import java.awt.Container;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.AdjustmentListener;
+import java.awt.event.AdjustmentEvent;
 
 class GameGUI implements Constants{
 	private GameClient gameClient;
-	private JFrame gameFrame  = new JFrame(GAME_TITLE);
+	private JFrame gameFrame;
+	private Container contentContainer;
 	private JPanel chatPanel = new JPanel();
 	private JTextArea chatArea = new JTextArea(TEXT_AREA_ROWS,TEXT_AREA_COLS);
-	private JScrollPane scrollPane = new JScrollPane(this.chatArea);
+	private JScrollPane chatScrollPane;
 	private JTextField chatField = new JTextField(TEXT_FIELD_COLS);
 	private JButton sendButton = new JButton(SEND_STRING);
 
@@ -33,18 +37,22 @@ class GameGUI implements Constants{
 	private void buildFrame(){
 		//this.gameFrame.add(this.drawingPanel);
 		this.gameFrame = new JFrame(GAME_TITLE+this.gameClient.getPlayerName());
-		this.gameFrame.add(this.chatPanel);
+		this.contentContainer = gameFrame.getContentPane();
+		this.contentContainer.add(chatPanel);
 	}
 
 	private void buildChatPanel(){
+
 		this.chatArea.setEditable(false);
 		this.chatArea.setLineWrap(true);
-		// this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener();
+
+		this.chatScrollPane = new JScrollPane(this.chatArea);
+		this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener(initializeAdjustmentListener());
 
 		this.chatField.addKeyListener(initializeSendViaEnterListener());
 		this.sendButton.addActionListener(initializeSendViaMouseClickListener());
 
-		this.chatPanel.add(this.chatArea);
+		this.chatPanel.add(this.chatScrollPane);
 		this.chatPanel.add(this.chatField);
 		this.chatPanel.add(this.sendButton);
 	}
@@ -92,6 +100,15 @@ class GameGUI implements Constants{
 		};
 
 		return sendViaMouseClickListener;
+	}
+
+	private AdjustmentListener initializeAdjustmentListener(){
+		AdjustmentListener adjustmentListener = new AdjustmentListener(){
+			public void adjustmentValueChanged(AdjustmentEvent e) {  
+           		e.getAdjustable().setValue(e.getAdjustable().getMaximum());  
+        	}
+		};
+		return adjustmentListener;
 	}
 
 }

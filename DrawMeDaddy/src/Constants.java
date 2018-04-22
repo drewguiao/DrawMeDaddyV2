@@ -6,7 +6,7 @@ public interface Constants {
 	public static final String GAME_TITLE = "Draw Me Daddy: ";
 
 	public static final int TEXT_AREA_ROWS = 10;
-	public static final int TEXT_AREA_COLS = 100;
+	public static final int TEXT_AREA_COLS = 80;
 
 	public static final int TEXT_FIELD_COLS = 80;
 

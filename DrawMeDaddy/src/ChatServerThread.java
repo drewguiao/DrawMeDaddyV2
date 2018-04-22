@@ -31,7 +31,7 @@ public class ChatServerThread extends Thread{
 		System.out.println("Server Thread: "+ID+" running.");
 		while(true) {
 			try {
-				server.handle(ipAddress,ID,streamIn.readUTF());
+				server.handle(streamIn.readUTF());
 			}catch(Exception e) {
 				System.out.println("Error reading: "+ID+" "+e.getMessage());
 			}

@@ -54,10 +54,10 @@ public class ChatServer implements Runnable,Constants{
 		}
 	}
 
-	public void handle(String ipAddress, int ID, String message) {
-		System.out.println(ipAddress+"/"+ID+": "+message);
+	public void handle(String message) {
+		System.out.println(message);
 		for(ChatServerThread client: clientList) {
-			client.send(ipAddress+"/"+ID+": "+message);
+			client.send(message);
 		}
 	}
 }

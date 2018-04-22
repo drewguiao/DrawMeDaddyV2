@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class ChatServer implements Runnable,Constants{
 	
 	private ServerSocket server;
-	private List<ChatServerThread> clientList = new ArrayList<>();
+	private List<ChatServerThread> clientList = Collections.synchronizedList(new ArrayList<>());
 	private Thread thread;
 	
 	public ChatServer() {
@@ -19,7 +19,7 @@ public class ChatServer implements Runnable,Constants{
 			server = new ServerSocket(PORT_NUMBER);
 			System.out.println("Server started: "+server);
 		}catch(Exception e) {
-			System.out.println("Cannot bind to port"+PORT_NUMBER+": "+e.getMessage());
+			System.out.println("ChatServer.java.setUp(): Cannot bind to port"+PORT_NUMBER+": "+e.getMessage());
 		}
 	}
 	
@@ -38,7 +38,7 @@ public class ChatServer implements Runnable,Constants{
 				addClient(server.accept());
 				System.out.println("Client Accepted!");
 			}catch(Exception e) {
-				System.out.println("Server accept error: "+e.getMessage());
+				System.out.println("ChatServer.java.run(): Server accept error: "+e.getMessage());
 			}
 		}
 	}
@@ -50,7 +50,7 @@ public class ChatServer implements Runnable,Constants{
 			client.open();
 			client.start();
 		}catch(Exception e) {
-			System.out.println("Error opening client thread: "+e.getMessage());
+			System.out.println("ChatServer.java.addClient(): Error opening client thread: "+e.getMessage());
 		}
 	}
 

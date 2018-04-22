@@ -20,7 +20,7 @@ public class ChatClientThread extends Thread{
 		try {
 			console = new DataInputStream(socket.getInputStream());
 		}catch(IOException ioe) {
-			System.out.println("Error getting input stream: "+ioe.getMessage());
+			System.out.println("ChatClientThread.java.open(): Error getting input stream: "+ioe.getMessage());
 		}
 	}
 	
@@ -29,7 +29,7 @@ public class ChatClientThread extends Thread{
 			try {				
 				gameClient.handle(console.readUTF());
 			}catch(IOException ioe) {
-				System.out.println("Listening error: " + ioe.getMessage());
+				System.out.println("ChatClientThread.java.run(): Listening error: " + ioe.getMessage());
 			}
 		}
 	}

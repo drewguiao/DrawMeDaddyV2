@@ -33,7 +33,7 @@ public class ChatServerThread extends Thread{
 			try {
 				server.handle(streamIn.readUTF());
 			}catch(Exception e) {
-				System.out.println("Error reading: "+ID+" "+e.getMessage());
+				System.out.println("ChatServerThread.java.run(): Error reading: "+ID+" "+e.getMessage());
 			}
 		}
 	}

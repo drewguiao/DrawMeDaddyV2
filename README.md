@@ -1,10 +1,19 @@
 # DrawMeDaddyV2
 
-For dev:
+For dev (in IDE):
 1. Download and install Eclipse from https://www.eclipse.org/downloads/
 2. Clone repository
 3. Open eclipse then import cloned repo as project
 4. Create your own branch and name it as your surname
+
+
+For Compiling and Running:
+1. Open Terminal (Linux) or CMD (Windows)
+2. Go to the the repository's directory (cd DrawMeDaddyV2\DrawMeDaddy\src)
+3. Compile everything via : javac * .java //remove space after asterisk
+4. Run server via: java ServerRunner
+5. Run client via: java ClientRunner
+
 
 Conventions:
 1. In committing, use this format: git commit -m "task accomplished/Signed:Name" eg. git commit -m "Added erase button/Signed:Drew Guiao"

@@ -22,7 +22,9 @@ public class ChatServerThread extends Thread{
 		try {
 			streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
-		}catch(Exception e) {}
+		}catch(Exception e) {
+			System.out.println("ChatServerThread.java.open():"+e.getMessage());
+		}
 		
 	}
 
@@ -43,7 +45,7 @@ public class ChatServerThread extends Thread{
 			streamOut.writeUTF(message);
 			streamOut.flush();
 		}catch(Exception e) {
-			//close client here
+			System.out.println("ChatServerThread.java.send():"+e.getMessage());
 		}
 	}
 }

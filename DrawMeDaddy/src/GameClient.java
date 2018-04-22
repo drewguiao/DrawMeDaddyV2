@@ -51,22 +51,7 @@ public class GameClient implements Runnable,Constants{
 		}
 		
 	}
-
-	//CHAT RUNNABLE
-	// @Override
-	// public void run() {
-	// 	Scanner console = new Scanner(System.in);
-	// 	while(true) {
-	// 		try {
-	// 			streamOut.writeUTF(console.nextLine());
-	// 			streamOut.flush();
-	// 		}catch(IOException ioe) {
-	// 			System.out.println(ioe.getMessage());
-	// 		}
-	// 	}
-		
-	// }
-
+	
 	//GAME RUNNABLE
 	@Override
 	public void run(){
@@ -82,7 +67,7 @@ public class GameClient implements Runnable,Constants{
 
 	public void send(String message){
 		try{
-			streamOut.writeUTF(this.playerName+":"+message);
+			streamOut.writeUTF(this.playerName+": "+message);
 			streamOut.flush();
 		}catch(IOException ioe){
 			System.out.println("GameClient.java.send():"+ioe.getMessage());

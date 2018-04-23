@@ -14,7 +14,9 @@ class DrawingArea extends JComponent{
 	private Image image;
 	private Graphics2D graphicsObject;
 	private GameClient gameClient;
+	
 	private int oldX, oldY, newX, newY;
+
 	private static final float DEFAULT_BRUSH_SIZE  = 3.0f;
 	private static final int START_X = 0;
 	private static final int START_Y = 0;
@@ -22,9 +24,37 @@ class DrawingArea extends JComponent{
 	public DrawingArea(GameClient gameClient){
 		this.gameClient = gameClient;
 		this.setDoubleBuffered(false);
-		this.addMouseListener(initializeMouseClickListener());
-		this.addMouseMotionListener(initializeMouseMotionListener());
-		this.setBackground(Color.WHITE);
+		// this.addMouseListener(initializeMouseClickListener());
+		// this.addMouseMotionListener(initializeMouseMotionListener());
+		this.addMouseListener(new MouseAdapter(){
+			public void mousePressed(MouseEvent me){
+				oldX = me.getX();
+				oldY = me.getY();
+				newX = oldX;
+				newY = oldY;
+				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
+				repaint();
+			}
+		});
+		this.addMouseMotionListener(new MouseMotionListener(){
+			@Override
+			public void mouseDragged(MouseEvent me){
+				newX = me.getX();
+				newY = me.getY();
+				if(graphicsObject != null){
+					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+					graphicsObject.drawLine(oldX,oldY,newX,newY);
+				}
+				repaint();
+				oldX = newX;
+				oldY = newY;
+			}
+			@Override
+			public void mouseMoved(MouseEvent me){}
+
+		});
+		// this.setBackground(Color.WHITE);
 	}
 
 	private MouseAdapter initializeMouseClickListener(){

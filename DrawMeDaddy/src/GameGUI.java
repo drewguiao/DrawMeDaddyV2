@@ -13,6 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.GridLayout;
+import java.awt.BorderLayout;
 class GameGUI implements Constants{
 
 	private GameClient gameClient;
@@ -24,6 +25,19 @@ class GameGUI implements Constants{
 	private JScrollPane chatScrollPane;
 	private JTextField chatField;
 	private JButton sendButton;
+
+	private static final int SCORE_AREA_ROWS = 10;
+	private static final int SCORE_AREA_COLS = 25;
+	private static final int CHAT_AREA_ROWS = 10;
+	private static final int CHAT_AREA_COLS = 25;
+	private static final int TEXT_FIELD_COLS = 25;
+	private static final int GRID_LAYOUT_ROWS = 0;
+	private static final int GRID_LAYOUT_COLS = 3;
+	private static final int FRAME_X_SIZE = 1000;
+	private static final int FRAME_Y_SIZE = 500;
+	
+	private static final String SEND_STRING = "SEND";
+	private static final String GAME_TITLE = "Draw Me Daddy: ";
 
 	public GameGUI(GameClient gameClient){
 		this.gameClient = gameClient;
@@ -40,7 +54,7 @@ class GameGUI implements Constants{
 
 	private void buildScorePanel(){
 		this.scorePanel = new JPanel();
-		this.scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.PAGE_AXIS));
+		this.scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
 		this.scoreArea = new JTextArea(SCORE_AREA_ROWS,SCORE_AREA_COLS);
 		this.scoreArea.setEditable(false);
 		this.scorePanel.add(scoreArea);
@@ -48,9 +62,13 @@ class GameGUI implements Constants{
 
 	private void buildDrawingPanel(){
 		this.drawingPanel = new JPanel();
+		this.drawingPanel.setLayout(new BorderLayout());
+
+		// this.controlPanel = new JPanel();
 		this.drawingArea = new DrawingArea(this.gameClient);
-		System.out.println("ADDED SUCCESSFULLY");
-		this.drawingPanel.add(drawingArea);
+		
+		// this.drawingPanel.add(this.controlPanel, BorderLayout.NORTH);
+		this.drawingPanel.add(this.drawingArea, BorderLayout.CENTER);
 	}
 
 
@@ -64,7 +82,7 @@ class GameGUI implements Constants{
 		this.chatArea.setLineWrap(true);
 
 		this.chatScrollPane = new JScrollPane(this.chatArea);
-		this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener(initializeAdjustmentListener());
+		// this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener(initializeAdjustmentListener());
 
 		this.chatField.addKeyListener(initializeSendViaEnterListener());
 		this.sendButton.addActionListener(initializeSendViaMouseClickListener());
@@ -77,7 +95,7 @@ class GameGUI implements Constants{
 	private void buildFrame(){
 		this.gameFrame = new JFrame(GAME_TITLE+this.gameClient.getPlayerName());
 		this.contentContainer = gameFrame.getContentPane();
-		this.contentContainer.setLayout(new GridLayout(0,3));
+		this.contentContainer.setLayout(new GridLayout(GRID_LAYOUT_ROWS,GRID_LAYOUT_COLS));
 
 		this.contentContainer.add(scorePanel);
 		this.contentContainer.add(drawingPanel);
@@ -85,7 +103,7 @@ class GameGUI implements Constants{
 	}
 
 	private void render(){
-		this.gameFrame.setSize(1000,1000);
+		this.gameFrame.setSize(FRAME_X_SIZE,FRAME_Y_SIZE);
 		this.gameFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.gameFrame.setVisible(true);
 	}

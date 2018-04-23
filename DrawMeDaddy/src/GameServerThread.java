@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 class GameServerThread extends Thread implements Constants{
+	
 	private GameServer gameServer;
 	private DatagramSocket serverSocket;
 	private List<GamePlayer> players = Collections.synchronizedList(new ArrayList<>());
+	private BagOfWords bag = new BagOfWords();
 
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
@@ -56,6 +58,8 @@ class GameServerThread extends Thread implements Constants{
 				GamePlayer player = new GamePlayer(name, packet.getAddress(),packet.getPort());
 				players.add(player);
 				broadcast(ACKNOWLEDGEMENT_SIGNAL+SPACE+name);
+				String word = bag.getRandomWord();
+				broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
 			}
 		}
 	}

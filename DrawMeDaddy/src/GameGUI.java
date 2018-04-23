@@ -173,4 +173,8 @@ class GameGUI implements Constants{
 		this.drawingArea.draw(oldX,oldY,newX,newY,brushSize);
 	}
 
+	public void showInWordField(String word){
+		this.wordField.setText(word);
+	}
+
 }

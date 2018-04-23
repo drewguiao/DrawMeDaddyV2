@@ -24,7 +24,11 @@ class GamePlayer{
 		return this.portNumber;
 	}
 
-	public int updateScore(int score){
+	public void updateScore(int score){
 		this.score += score;
+	}
+
+	public int getScore(){
+		return this.score;
 	}
 }

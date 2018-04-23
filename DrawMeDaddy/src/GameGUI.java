@@ -95,7 +95,7 @@ class GameGUI implements Constants{
 		this.chatArea.setLineWrap(true);
 
 		this.chatScrollPane = new JScrollPane(this.chatArea);
-		// this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener(initializeAdjustmentListener());
+		this.chatScrollPane.getVerticalScrollBar().addAdjustmentListener(initializeAdjustmentListener());
 
 		this.chatField.addKeyListener(initializeSendViaEnterListener());
 		this.sendButton.addActionListener(initializeSendViaMouseClickListener());

@@ -10,15 +10,13 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
-class DrawingArea extends JComponent{
+class DrawingArea extends JComponent implements Constants{
 	private Image image;
 	private Graphics2D graphicsObject;
 	private GameClient gameClient;
 
 	private int oldX, oldY, newX, newY;
 
-	private static final String COORDINATE_SIGNAL = "COORDINATE";
-	private static final String SPACE = " ";
 
 	private static final float DEFAULT_BRUSH_SIZE  = 3.0f;
 	private static final int START_X = 0;
@@ -33,7 +31,7 @@ class DrawingArea extends JComponent{
 				oldY = me.getY();
 				newX = oldX;
 				newY = oldY;
-				String message = COORDINATE_SIGNAL+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+				String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
 				gameClient.sendGameData(message);
 				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
@@ -46,7 +44,7 @@ class DrawingArea extends JComponent{
 				newX = me.getX();
 				newY = me.getY();
 				if(graphicsObject != null){
-					String message = COORDINATE_SIGNAL+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+					String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
 					gameClient.sendGameData(message);
 					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 					graphicsObject.drawLine(oldX,oldY,newX,newY);
@@ -80,6 +78,12 @@ class DrawingArea extends JComponent{
 		newX = oldX;
 		newY = oldY;
 		repaint();
+	}
+
+	public void draw(int oldX, int oldY, int newX, int newY, float brushSize){
+		graphicsObject.setStroke(new BasicStroke(brushSize,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+		this.graphicsObject.drawLine(oldX,oldY,newX,newY);
+		this.repaint();
 	}
 
 }

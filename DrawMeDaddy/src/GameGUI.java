@@ -23,12 +23,12 @@ class GameGUI implements Constants{
 	private DrawingArea drawingArea;
 	private JTextArea chatArea,scoreArea;
 	private JScrollPane chatScrollPane;
-	private JTextField chatField;
+	private JTextField chatField,wordField,timerField;
 	private JButton sendButton;
 
 	private static final int SCORE_AREA_ROWS = 10;
 	private static final int SCORE_AREA_COLS = 25;
-	private static final int CHAT_AREA_ROWS = 10;
+	private static final int CHAT_AREA_ROWS = 25;
 	private static final int CHAT_AREA_COLS = 25;
 	private static final int TEXT_FIELD_COLS = 25;
 	private static final int GRID_LAYOUT_ROWS = 0;
@@ -54,10 +54,23 @@ class GameGUI implements Constants{
 
 	private void buildScorePanel(){
 		this.scorePanel = new JPanel();
-		this.scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
+		// this.scorePanel.setLayout(new BoxLayout(scorePanel, BoxLayout.Y_AXIS));
 		this.scoreArea = new JTextArea(SCORE_AREA_ROWS,SCORE_AREA_COLS);
 		this.scoreArea.setEditable(false);
+		this.scoreArea.setText("SCORE AREA");
+
+		this.wordField = new JTextField(TEXT_FIELD_COLS);
+		this.wordField.setEnabled(false);
+		this.wordField.setText("WORD TO GUESS AREA");
+
+		this.timerField = new JTextField(TEXT_FIELD_COLS);
+		this.timerField.setEnabled(false);
+		this.timerField.setText("TimerField");
+
 		this.scorePanel.add(scoreArea);
+		this.scorePanel.add(wordField);
+		this.scorePanel.add(timerField);
+
 	}
 
 	private void buildDrawingPanel(){
@@ -154,6 +167,10 @@ class GameGUI implements Constants{
         	}
 		};
 		return adjustmentListener;
+	}
+
+	public void paintOnComponent(int oldX, int oldY, int newX, int newY, float brushSize){
+		this.drawingArea.draw(oldX,oldY,newX,newY,brushSize);
 	}
 
 }

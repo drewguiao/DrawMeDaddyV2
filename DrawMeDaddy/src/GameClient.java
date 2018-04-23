@@ -24,6 +24,8 @@ public class GameClient implements Runnable,Constants{
 	
 	private DatagramSocket datagramSocket;
 
+	private boolean gameConnected = false;
+
 	
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
@@ -48,6 +50,7 @@ public class GameClient implements Runnable,Constants{
 		try{
 			this.datagramSocket = new DatagramSocket();
 			this.datagramSocket.setSoTimeout(SOCKET_TIME_OUT);
+			System.out.println("Drawing Connection establised!");
 		}catch(SocketException se){
 			System.out.println("GameClient.java.setUpDrawing(): "+se.getMessage());
 		}
@@ -73,11 +76,41 @@ public class GameClient implements Runnable,Constants{
 	public void run(){
 		this.gui = new GameGUI(this);
 		while(true){
-			// sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
-			sendGameData(EMPTY_STRING);
+			byte[] buffer = new byte[BYTE_MAX_SIZE];
+			DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
+			try{
+				datagramSocket.receive(packet);
+			}catch(IOException ioe){}
+
+			String receivedData = new String(buffer);
+			receivedData = receivedData.trim();
+			if(receivedData.startsWith(ACKNOWLEDGEMENT_SIGNAL)){
+				String[] tokens = receivedData.split(SPACE);
+				String name = tokens[1];
+				this.gameConnected = true;
+				this.handle("Player "+name+SPACE+ACKNOWLEDGEMENT_SIGNAL+"!");
+			}else if(!gameConnected){
+				sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
+				gameConnected = true;
+			}else if(gameConnected){
+				if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
+				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
+				
+			}
+
 		}
 	}
 	
+	private void translateCoordinateData(String receivedData){
+		String[] coordinateInfo = receivedData.split(SPACE);
+		int oldX = Integer.parseInt(coordinateInfo[1]);
+		int oldY = Integer.parseInt(coordinateInfo[2]);
+		int newX = Integer.parseInt(coordinateInfo[3]);
+		int newY = Integer.parseInt(coordinateInfo[4]);
+		float brushSize = Float.parseFloat(coordinateInfo[5]);
+		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize);
+	}
+
 
 	//show message
 	public void handle(String message) {

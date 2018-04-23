@@ -2,13 +2,14 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 class GameServerThread extends Thread implements Constants{
 	private GameServer gameServer;
 	private DatagramSocket serverSocket;
-
-	private static final int SOCKET_TIME_OUT = 100;
-	private static final int BYTE_MAX_SIZE = 256;
+	private List<GamePlayer> players = Collections.synchronizedList(new ArrayList<>());
 
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
@@ -34,9 +35,8 @@ class GameServerThread extends Thread implements Constants{
 			DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
 			try{
 				serverSocket.receive(packet);
-			}catch(IOException ioe){
-				System.out.println("GameServerThread.java.run(): "+ioe.getMessage());
-			}
+			}catch(IOException ioe){}
+			
 			String receivedData = new String(buffer);
 			receivedData = receivedData.trim();
 
@@ -51,13 +51,28 @@ class GameServerThread extends Thread implements Constants{
 				String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize);
 				this.broadcast(message);
 			}else if(receivedData.startsWith(CONNECT_SIGNAL)){
-				this.broadcast(receivedData);
+				String[] tokens = receivedData.split(SPACE);
+				String name = tokens[1];
+				GamePlayer player = new GamePlayer(name, packet.getAddress(),packet.getPort());
+				players.add(player);
+				broadcast(ACKNOWLEDGEMENT_SIGNAL+SPACE+name);
 			}
 		}
 	}
 
+	public void send(GamePlayer player, String message){
+		byte[] buffer = message.getBytes();
+		DatagramPacket packet = new DatagramPacket(buffer, buffer.length, player.getAddress(),player.getPortNumber());
+		try{
+			serverSocket.send(packet);
+		}catch(IOException ioe){
+			System.out.println("GameServerThread.java.send(): "+ioe.getMessage());
+		}
+	}
+
+
 	public void broadcast(String message){
-		System.out.println(message);
+		for(GamePlayer player: players) this.send(player,message);
 	}
 
 }

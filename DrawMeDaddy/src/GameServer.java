@@ -4,29 +4,33 @@ import java.util.Collections;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ChatServer implements Runnable,Constants{
+public class GameServer implements Runnable,Constants{
 	
+	private Thread thread;
 	private ServerSocket server;
 	private List<ChatServerThread> clientList = Collections.synchronizedList(new ArrayList<>());
-	private Thread thread;
-	
-	public ChatServer() {
-		
+	private GameServerThread motherServer;
+
+	private int portNumber;
+
+	public GameServer(int portNumber) {
+		this.portNumber = portNumber;	
 	}
 
-	public void setUp() {
+	public void setUpChat() {
 		try {
 			System.out.println("Binding to port: "+PORT_NUMBER+". Please wait.");
 			server = new ServerSocket(PORT_NUMBER);
 			System.out.println("Server started: "+server);
 		}catch(Exception e) {
-			System.out.println("ChatServer.java.setUp(): Cannot bind to port"+PORT_NUMBER+": "+e.getMessage());
+			System.out.println("GameServer.java.setUp(): Cannot bind to port"+PORT_NUMBER+": "+e.getMessage());
 		}
 	}
 	
 	public void start() {
 		if(thread == null) {
 			thread = new Thread(this);
+			this.motherServer = new GameServerThread(this);
 			thread.start();
 		}
 	}
@@ -39,7 +43,7 @@ public class ChatServer implements Runnable,Constants{
 				addClient(server.accept());
 				System.out.println("Client Accepted!");
 			}catch(Exception e) {
-				System.out.println("ChatServer.java.run(): Server accept error: "+e.getMessage());
+				System.out.println("GameServer.java.run(): Server accept error: "+e.getMessage());
 			}
 		}
 	}
@@ -51,7 +55,7 @@ public class ChatServer implements Runnable,Constants{
 			client.open();
 			client.start();
 		}catch(Exception e) {
-			System.out.println("ChatServer.java.addClient(): Error opening client thread: "+e.getMessage());
+			System.out.println("GameServer.java.addClient(): Error opening client thread: "+e.getMessage());
 		}
 	}
 
@@ -60,5 +64,9 @@ public class ChatServer implements Runnable,Constants{
 		for(ChatServerThread client: clientList) {
 			client.send(message);
 		}
+	}
+
+	public int getPortNumber(){
+		return this.portNumber;
 	}
 }

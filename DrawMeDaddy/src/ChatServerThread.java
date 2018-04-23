@@ -10,9 +10,9 @@ public class ChatServerThread extends Thread{
 	private String ipAddress;
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
-	private ChatServer server;
-	public ChatServerThread(ChatServer chatServer, Socket socket) {
-		this.server = chatServer;
+	private GameServer server;
+	public ChatServerThread(GameServer gameServer, Socket socket) {
+		this.server = gameServer;
 		this.socket = socket;
 		this.ID = socket.getPort();
 		this.ipAddress = socket.getInetAddress().getHostAddress();

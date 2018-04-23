@@ -14,8 +14,11 @@ class DrawingArea extends JComponent{
 	private Image image;
 	private Graphics2D graphicsObject;
 	private GameClient gameClient;
-	
+
 	private int oldX, oldY, newX, newY;
+
+	private static final String COORDINATE_SIGNAL = "COORDINATE";
+	private static final String SPACE = " ";
 
 	private static final float DEFAULT_BRUSH_SIZE  = 3.0f;
 	private static final int START_X = 0;
@@ -24,14 +27,14 @@ class DrawingArea extends JComponent{
 	public DrawingArea(GameClient gameClient){
 		this.gameClient = gameClient;
 		this.setDoubleBuffered(false);
-		// this.addMouseListener(initializeMouseClickListener());
-		// this.addMouseMotionListener(initializeMouseMotionListener());
 		this.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me){
 				oldX = me.getX();
 				oldY = me.getY();
 				newX = oldX;
 				newY = oldY;
+				String message = COORDINATE_SIGNAL+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+				gameClient.sendGameData(message);
 				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
 				repaint();
@@ -43,6 +46,8 @@ class DrawingArea extends JComponent{
 				newX = me.getX();
 				newY = me.getY();
 				if(graphicsObject != null){
+					String message = COORDINATE_SIGNAL+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+					gameClient.sendGameData(message);
 					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 					graphicsObject.drawLine(oldX,oldY,newX,newY);
 				}
@@ -57,40 +62,6 @@ class DrawingArea extends JComponent{
 		// this.setBackground(Color.WHITE);
 	}
 
-	private MouseAdapter initializeMouseClickListener(){
-		MouseAdapter mouseClickListener = new MouseAdapter(){
-			public void mousePressed(MouseEvent me){
-				oldX = me.getX();
-				oldY = me.getY();
-				newX = oldX;
-				newY = oldY;
-				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
-				repaint();
-			}
-		};
-		return mouseClickListener;
-	}
-
-	private MouseMotionListener initializeMouseMotionListener(){
-		MouseMotionListener mouseMotionListener = new MouseMotionListener(){
-			@Override
-			public void mouseDragged(MouseEvent me){
-				newX = me.getX();
-				newY = me.getY();
-				if(graphicsObject != null){
-					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-					graphicsObject.drawLine(oldX,oldY,newX,newY);
-				}
-				repaint();
-				oldX = newX;
-				oldY = newY;
-			}
-			@Override
-			public void mouseMoved(MouseEvent me){}
-		};
-		return mouseMotionListener;
-	}
 
 	protected void paintComponent(Graphics g){
 		if(image == null){

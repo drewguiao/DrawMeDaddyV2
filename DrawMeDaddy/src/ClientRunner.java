@@ -14,6 +14,7 @@ public class ClientRunner {
 
 		GameClient gameClient = new GameClient(name,serverAddress,portNumber);
 		gameClient.setUpChat();
+		gameClient.setUpDrawing();
 		gameClient.start();
 	}
 }

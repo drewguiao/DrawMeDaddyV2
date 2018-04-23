@@ -111,7 +111,6 @@ public class GameClient implements Runnable,Constants{
 		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize);
 	}
 
-
 	//show message
 	public void handle(String message) {
 		this.gui.showMessage(message);

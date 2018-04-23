@@ -4,6 +4,8 @@ class GamePlayer{
 	private String name;
 	private InetAddress address;
 	private int portNumber;
+	private int score = 0;
+
 	public GamePlayer(String name, InetAddress address, int portNumber){
 		this.name = name;
 		this.address = address;
@@ -20,5 +22,9 @@ class GamePlayer{
 
 	public int getPortNumber(){
 		return this.portNumber;
+	}
+
+	public int updateScore(int score){
+		this.score += score;
 	}
 }

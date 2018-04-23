@@ -95,12 +95,20 @@ public class GameClient implements Runnable,Constants{
 			}else if(gameConnected){
 				if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
-				
+				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)){
+					String[] tokens = receivedData.split(SPACE);
+					String word = tokens[1];
+					this.updateWordInGUI(word);
+				}	
 			}
 
 		}
 	}
 	
+	private void updateWordInGUI(String word){
+		this.gui.showInWordField(word);
+	}
+
 	private void translateCoordinateData(String receivedData){
 		String[] coordinateInfo = receivedData.split(SPACE);
 		int oldX = Integer.parseInt(coordinateInfo[1]);

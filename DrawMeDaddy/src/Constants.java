@@ -9,7 +9,8 @@ public interface Constants {
 	
 	public static final String CONNECT_SIGNAL = "CONNECT";
 	public static final String ACKNOWLEDGEMENT_SIGNAL = "CONNECTED";
-	
+	public static final String WORD_UPDATE_SIGNAL = "WORD";
+
 	public static final String SPACE = " ";
 	public static final String NEW_LINE = "\n";
 	public static final String EMPTY_STRING = "";

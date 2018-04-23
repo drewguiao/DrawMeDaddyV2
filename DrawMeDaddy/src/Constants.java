@@ -3,6 +3,7 @@ public interface Constants {
 	public static final int PORT_NUMBER = 1111;
 	public static final String SERVER_ADDRESS = "localhost";
 	
+	public static final String CONNECT_SIGNAL = "CONNECT";
 	public static final String COORDINATE_SIGNAL = "COORDINATE";
 	
 	public static final String SPACE = " ";

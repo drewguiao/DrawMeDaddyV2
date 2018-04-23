@@ -50,6 +50,8 @@ class GameServerThread extends Thread implements Constants{
 				float brushSize = Float.parseFloat(coordinateData[5]);
 				String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize);
 				this.broadcast(message);
+			}else if(receivedData.startsWith(CONNECT_SIGNAL)){
+				this.broadcast(receivedData);
 			}
 		}
 	}

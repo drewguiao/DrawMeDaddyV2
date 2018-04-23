@@ -24,7 +24,6 @@ public class GameClient implements Runnable,Constants{
 	
 	private DatagramSocket datagramSocket;
 
-	private static final int SOCKET_TIME_OUT = 100;
 	
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
@@ -74,6 +73,7 @@ public class GameClient implements Runnable,Constants{
 	public void run(){
 		this.gui = new GameGUI(this);
 		while(true){
+			// sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
 			sendGameData(EMPTY_STRING);
 		}
 	}

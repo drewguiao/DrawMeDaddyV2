@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.ArrayList;
 import java.io.BufferedReader;
-import jva.io.FileReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.util.Random;
 
@@ -18,7 +18,7 @@ class BagOfWords{
         try{
             BufferedReader breader = new BufferedReader(new FileReader(fileName));
             while(breader.ready()){
-                String currentLine = breader.readLine();
+                String currentLine = breader.readLine().toUpperCase();
                 this.words.add(currentLine);
             }
             breader.close();
@@ -34,8 +34,9 @@ class BagOfWords{
         String word = words.get(randomIndex);
         while(cache.contains(word)){
             randomIndex = randomizer.nextInt(numOfWords);
-            word = word.get(randomIndex);
+            word = words.get(randomIndex);
         }
+        cache.add(word);
         return word;
     }
 

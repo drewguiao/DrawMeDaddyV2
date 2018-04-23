@@ -14,19 +14,16 @@ public class GameClient implements Runnable,Constants{
 	private Thread thread;
 	private DataInputStream console;
 	private DataOutputStream streamOut;
+	private DatagramSocket datagramSocket;
 	private ChatClientThread client;
 	private GameGUI gui;
 	
 	private String playerName;
 	private String serverAddress;
-	
+	private String wordToGuess;
 	private int portNumber;
-	
-	private DatagramSocket datagramSocket;
-
 	private boolean gameConnected = false;
 
-	
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
 		this.serverAddress = serverAddress;
@@ -90,19 +87,27 @@ public class GameClient implements Runnable,Constants{
 				this.gameConnected = true;
 				this.handle("Player "+name+SPACE+ACKNOWLEDGEMENT_SIGNAL+"!");
 			}else if(!gameConnected){
-				sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
-				gameConnected = true;
+				this.sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
+				// this.gameConnected = true;
 			}else if(gameConnected){
 				if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)){
 					String[] tokens = receivedData.split(SPACE);
-					String word = tokens[1];
-					this.updateWordInGUI(word);
+					this.wordToGuess = tokens[1];
+					this.updateWordInGUI(wordToGuess);
+				}
+				else if(receivedData.startsWith(SCORE_LIST_SIGNAL)){
+					receivedData = receivedData.replace(SCORE_LIST_SIGNAL,EMPTY_STRING);
+					this.updateScoreList(receivedData);
 				}	
 			}
 
 		}
+	}
+
+	private void updateScoreList(String scoreList){
+		this.gui.showInScoreList(scoreList);
 	}
 	
 	private void updateWordInGUI(String word){
@@ -126,11 +131,19 @@ public class GameClient implements Runnable,Constants{
 
 	public void send(String message){
 		try{
-			streamOut.writeUTF(this.playerName+": "+message);
-			streamOut.flush();
+			if(isMessageTheWord(message)){
+				sendGameData(WORD_CORRECT_SIGNAL+SPACE+this.playerName);
+			}else{
+				streamOut.writeUTF(this.playerName+": "+message);
+				streamOut.flush();
+			}
 		}catch(IOException ioe){
 			System.out.println("GameClient.java.send():"+ioe.getMessage());
 		}
+	}
+
+	public boolean isMessageTheWord(String message){
+		return message.toUpperCase().equals(this.wordToGuess);
 	}
 
 	public void sendGameData(String message){

@@ -60,6 +60,20 @@ class GameServerThread extends Thread implements Constants{
 				broadcast(ACKNOWLEDGEMENT_SIGNAL+SPACE+name);
 				String word = bag.getRandomWord();
 				broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
+			}else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)){
+				String[] tokens = receivedData.split(SPACE);
+				String playerName = tokens[1];
+				for(GamePlayer player:players){
+					if(player.getName().equals(playerName)){
+						player.updateScore(10);
+						break;
+					}
+				}
+				String scoreList = "";
+				for(GamePlayer player:players) scoreList += player + NEW_LINE;
+				broadcast(SCORE_LIST_SIGNAL+SPACE+scoreList);
+				String word = bag.getRandomWord();
+				broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
 			}
 		}
 	}

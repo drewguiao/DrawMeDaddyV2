@@ -177,4 +177,8 @@ class GameGUI implements Constants{
 		this.wordField.setText(word);
 	}
 
+	public void showInScoreList(String list){
+		this.scoreArea.setText(list);
+	}
+
 }

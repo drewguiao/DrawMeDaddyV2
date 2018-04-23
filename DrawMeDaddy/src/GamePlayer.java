@@ -31,4 +31,13 @@ class GamePlayer{
 	public int getScore(){
 		return this.score;
 	}
+
+	@Override
+	public String toString(){
+		String retVal = "";
+		retVal += this.name + " ";
+		retVal += this.score + " ";
+		return retVal.trim();
+	}
+	
 }

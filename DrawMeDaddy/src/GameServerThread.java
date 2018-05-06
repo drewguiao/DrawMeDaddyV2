@@ -63,6 +63,7 @@ class GameServerThread extends Thread implements Constants{
 			}else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)){
 				String[] tokens = receivedData.split(SPACE);
 				String playerName = tokens[1];
+				broadcast(GOT_THE_WORD_SIGNAL+SPACE+playerName);
 				for(GamePlayer player:players){
 					if(player.getName().equals(playerName)){
 						player.updateScore(10);

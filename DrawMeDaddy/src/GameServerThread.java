@@ -19,7 +19,9 @@ class GameServerThread extends Thread implements Constants{
 	private int gameStatus = WAITING_FOR_PLAYERS;
 
 	private static final int ROUNDS = 3;
-	private int numberOfRounds = 0;
+	private static final int STAGE_TIMER = 60; // 60 seconds
+	private static final int BEFORE_GUESSING_TIMER = 3; //3 seconds
+	private int numberOfRounds = 1;
 	private int numberOfStages = 0;
 
 	public GameServerThread(GameServer gameServer){
@@ -68,27 +70,28 @@ class GameServerThread extends Thread implements Constants{
 						}else{
 							this.numberOfStages++;
 							GamePlayer artist = retrieveAPlayer();
+							String word = bag.getRandomWord();
 							broadcast(ARTIST_SIGNAL + SPACE + artist.getName());
-							//broadcast word here
+							//Timer timer = new Timer(BEFORE_GUESSING_TIMER);
+							//while(timer.getTimeLeft() != 0) broadcast(TIME_SIGNAL+timer.getTimeLeft());
+							
 
 							this.gameStatus = ONGOING_STAGE;
-							//add a timer here
-							broadcast(ONGOING_STAGE_SIGNAL+ SPACE + this.numberOfStages + SPACE + this.players.size());
+							broadcast(ONGOING_STAGE_SIGNAL+ SPACE + this.numberOfRounds + SPACE + this.numberOfStages + SPACE + this.players.size());
+							broadcast(WORD_UPDATE_SIGNAL + SPACE + word);
+							// Timer timer = new Timer(STAGE_TIMER);
 						}
 					}
 
 				break;
 				case ONGOING_STAGE:
+					//while(timer.getTimeLeft() != 0){
+					//// int timeLeft = timer.getTimeLeft();
+					// broadcast(TIME_SIGNAL+SPACE+timeLeft);
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
-				break;
-				case ONGOING_ROUND:
-					// disable drawing except artist
-					// can chat
-					// can draw
-
-					//if a players guesses the drawing, gets current time, adds it to player's score
-					//then, time gets divided by numberOfPlayers
-					//if timer reaches 0, goes to post Round
+					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData);
+					//}
+					//this.gameStatus = PRE_ROUND;
 				break;
 				case POST_ROUND:
 					// get next player who will be artist
@@ -155,6 +158,17 @@ class GameServerThread extends Thread implements Constants{
 			 this.gameStatus = PRE_ROUND;
 			 broadcast(PRE_ROUND_SIGNAL);
 		}
+	}
+
+	//To do: add Timer timer as parameter
+	private void broadcastCorrectPlayer(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String playerName = tokens[1];
+		int score = Integer.parseInt(tokens[2]);
+		GamePlayer player = findPlayerByName(playerName);
+		player.updateScore(score);
+		//timer.reduceTime(score);
+		broadcast(GOT_THE_WORD_SIGNAL + SPACE + playerName);
 	}
 
 	private GamePlayer findPlayerByName(String playerName){

@@ -27,6 +27,8 @@ public class GameClient implements Runnable,Constants{
 	private boolean isConnectedToGame = false;
 	private int gameStatus = WAITING_FOR_PLAYERS;
 
+	private static final int TIME_LEFT_PLACEHOLDER = 10;
+
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
 		this.serverAddress = serverAddress;
@@ -85,14 +87,11 @@ public class GameClient implements Runnable,Constants{
 			String receivedData = new String(buffer);
 			receivedData = receivedData.trim();
 
-
-
-
 			if(receivedData.startsWith(ACKNOWLEDGEMENT_SIGNAL)){
 				String[] tokens = receivedData.split(SPACE);
 				String name = tokens[1];
 				this.gameConnected = true;
-				this.handle("Player "+name+SPACE+ACKNOWLEDGEMENT_SIGNAL+"!");
+				this.handle(SERVER_PREFIX + name + " has connected!");
 			}else if(!gameConnected){
 				this.sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
 				// this.gameConnected = true;
@@ -151,8 +150,9 @@ public class GameClient implements Runnable,Constants{
 	private void notifyEveryoneThatGameHasStarted(String receivedData){
 		String[] tokens = receivedData.split(SPACE);
 		int currentRound = Integer.parseInt(tokens[1]);
-		int totalRounds = Integer.parseInt(tokens[2]);
-		this.handle(SERVER_PREFIX+" Stage: "+currentRound+"/"+totalRounds);
+		int currentStage = Integer.parseInt(tokens[2]);
+		int totalStages = Integer.parseInt(tokens[3]);
+		this.handle(SERVER_PREFIX+" Round: "+currentRound+"/3 Stage: "+currentStage+"/"+totalStages);
 		this.gameStatus = ONGOING_STAGE;
 	}
 
@@ -183,8 +183,8 @@ public class GameClient implements Runnable,Constants{
 
 	public void send(String message){
 		try{
-			if(this.gameStatus == ONGOING_ROUND && isMessageTheWord(message)){
-				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName);
+			if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message)){
+				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName + SPACE  + TIME_LEFT_PLACEHOLDER);
 			}else if(this.gameStatus == WAITING_FOR_PLAYERS && isMessageRequestToStart(message)){
 				sendGameData(WANTS_TO_START_SIGNAL + SPACE + this.playerName);
 			}else{

@@ -107,6 +107,8 @@ class GameGUI implements Constants{
 
 	private void buildFrame(){
 		this.gameFrame = new JFrame(GAME_TITLE+this.gameClient.getPlayerName());
+		this.gameFrame.setResizable(false);
+		//this.gameFrame.setUndecorated(true);
 		this.contentContainer = gameFrame.getContentPane();
 		this.contentContainer.setLayout(new GridLayout(GRID_LAYOUT_ROWS,GRID_LAYOUT_COLS));
 

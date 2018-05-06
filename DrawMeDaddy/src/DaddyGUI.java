@@ -44,7 +44,7 @@ public class DaddyGUI {
 		this.frame.setSize(800, 700);
 		this.frame.setResizable(false);
 		this.frame.setLocationRelativeTo(null);
-		this.frame.setUndecorated(true);
+		this.frame.setUndecorated(false);
 		
 		this.container = this.frame.getContentPane();
 		this.container.setLayout(null);

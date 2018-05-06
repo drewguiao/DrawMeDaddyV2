@@ -14,16 +14,18 @@ class DrawingArea extends JComponent implements Constants{
 	private Image image;
 	private Graphics2D graphicsObject;
 	private GameClient gameClient;
+	private BrushSettings brushSettings;
 
 	private int oldX, oldY, newX, newY;
 
 
-	private static final float DEFAULT_BRUSH_SIZE  = 3.0f;
+	private static final float DEFAULT_BRUSH_SIZE  = 5.0f;
 	private static final int START_X = 0;
 	private static final int START_Y = 0;
 
-	public DrawingArea(GameClient gameClient){
+	public DrawingArea(GameClient gameClient, BrushSettings brushSettings){
 		this.gameClient = gameClient;
+		this.brushSettings = brushSettings;
 		this.setDoubleBuffered(false);
 		this.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me){
@@ -33,7 +35,8 @@ class DrawingArea extends JComponent implements Constants{
 				newY = oldY;
 				String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
 				gameClient.sendGameData(message);
-				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+				graphicsObject.setPaint(brushSettings.getColor());
+				graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
 				repaint();
 			}
@@ -46,7 +49,8 @@ class DrawingArea extends JComponent implements Constants{
 				if(graphicsObject != null){
 					String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
 					gameClient.sendGameData(message);
-					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+					graphicsObject.setPaint(brushSettings.getColor());
+					graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 					graphicsObject.drawLine(oldX,oldY,newX,newY);
 				}
 				repaint();
@@ -74,14 +78,15 @@ class DrawingArea extends JComponent implements Constants{
 	private void clear(){
 		graphicsObject.setPaint(Color.WHITE);
 		graphicsObject.fillRect(START_X,START_Y,this.getSize().width,this.getSize().height);
-		graphicsObject.setPaint(Color.BLACK);
+		graphicsObject.setPaint(brushSettings.getColor());
 		newX = oldX;
 		newY = oldY;
 		repaint();
 	}
 
 	public void draw(int oldX, int oldY, int newX, int newY, float brushSize){
-		graphicsObject.setStroke(new BasicStroke(brushSize,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+		graphicsObject.setPaint(brushSettings.getColor());
+		graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 		this.graphicsObject.drawLine(oldX,oldY,newX,newY);
 		this.repaint();
 	}

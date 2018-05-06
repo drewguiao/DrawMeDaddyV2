@@ -11,12 +11,7 @@ public class TimerClass implements Constants{
 		Timer time = new Timer();
 		time.scheduleAtFixedRate(
 			new  TimerTask(){
-				
 				public void run(){
-					if(seconds==10){
-						System.out.println("Divide by N");
-						divideTimeByN(2);
-					}
 					if(seconds==1){
 						System.out.println("Time's Up!");
 						time.cancel();
@@ -36,8 +31,7 @@ public class TimerClass implements Constants{
 	}
 
 	private int decreaseSeconds(){
-		--seconds;
-		return seconds;
+		return --seconds;
 	}
 
 	public int getCurrentTime(){

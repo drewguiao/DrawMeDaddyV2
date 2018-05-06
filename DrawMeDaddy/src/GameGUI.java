@@ -181,4 +181,12 @@ class GameGUI implements Constants{
 		this.scoreArea.setText(list);
 	}
 
+	public void disableDrawingArea(){
+		this.drawingArea.disableDrawing();
+	}
+
+	public void enableDrawingArea(){
+		this.drawingArea.enableDrawing();
+	}
+
 }

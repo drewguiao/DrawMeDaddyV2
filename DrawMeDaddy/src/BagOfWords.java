@@ -40,4 +40,12 @@ class BagOfWords{
         return word;
     }
 
+    public List<String> getCache(){
+        return this.cache;
+    }
+
+    public void clearWordCache(){
+        this.cache.clear();
+    }
+
 }

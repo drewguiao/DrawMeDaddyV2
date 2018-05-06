@@ -24,11 +24,11 @@ public class GameClient implements Runnable,Constants{
 	private int portNumber;
 	private boolean gameConnected = false;
 
-	private boolean isConnectedToGame = false;
 	private int gameStatus = WAITING_FOR_PLAYERS;
+	private boolean isArtist = true;
+	private boolean hasTheAnswer = false;
 
 	private static final int TIME_LEFT_PLACEHOLDER = 10;
-
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
 		this.serverAddress = serverAddress;
@@ -153,17 +153,23 @@ public class GameClient implements Runnable,Constants{
 		int currentStage = Integer.parseInt(tokens[2]);
 		int totalStages = Integer.parseInt(tokens[3]);
 		this.handle(SERVER_PREFIX+" Round: "+currentRound+"/3 Stage: "+currentStage+"/"+totalStages);
+		this.hasTheAnswer = false;
 		this.gameStatus = ONGOING_STAGE;
 	}
 
 	private void translateArtistData(String receivedData){
 		String[] tokens = receivedData.split(SPACE);
 		String artistName = tokens[1];
-		this.handle(SERVER_PREFIX+playerName+" is drawing!");
+		this.handle(SERVER_PREFIX+artistName+" is drawing!");
 		System.out.println("PLAYER: "+this.playerName);
 		System.out.println("ARTIST: "+artistName);
-		if(this.playerName.equals(artistName)) this.gui.enableDrawingArea();
-		else this.gui.disableDrawingArea();
+		if(this.playerName.equals(artistName)){
+			this.gui.enableDrawingArea();
+			this.isArtist = true;
+		}else{
+			this.gui.disableDrawingArea();
+			this.isArtist = false;
+		}
 	}
 
 	private void translateCoordinateData(String receivedData){
@@ -183,8 +189,13 @@ public class GameClient implements Runnable,Constants{
 
 	public void send(String message){
 		try{
-			if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message)){
+			if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message) && !isArtist && !hasTheAnswer){
 				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName + SPACE  + TIME_LEFT_PLACEHOLDER);
+				this.hasTheAnswer = true;
+			}else if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message) && !isArtist && hasTheAnswer){
+				//does nothing
+			}else if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message) && isArtist){
+				//does nothing
 			}else if(this.gameStatus == WAITING_FOR_PLAYERS && isMessageRequestToStart(message)){
 				sendGameData(WANTS_TO_START_SIGNAL + SPACE + this.playerName);
 			}else{

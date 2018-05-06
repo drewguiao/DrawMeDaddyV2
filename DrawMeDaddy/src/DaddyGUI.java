@@ -153,12 +153,4 @@ public class DaddyGUI {
 		this.frame.setVisible(true);
 		
 	}
-
-
-	
-	
-	
-	
-	
-	
 }

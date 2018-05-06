@@ -1,10 +1,11 @@
 import java.net.InetAddress;
 
-class GamePlayer{
+class GamePlayer implements Comparable<GamePlayer>{
 	private String name;
 	private InetAddress address;
 	private int portNumber;
 	private int score = 0;
+	private boolean isReady = false;
 
 	public GamePlayer(String name, InetAddress address, int portNumber){
 		this.name = name;
@@ -32,12 +33,25 @@ class GamePlayer{
 		return this.score;
 	}
 
+	public boolean isReady(){
+		return this.isReady;
+	}
+
+	public void setReadiness(boolean status){
+		this.isReady = status;
+	}
+
 	@Override
 	public String toString(){
 		String retVal = "";
 		retVal += this.name + " ";
 		retVal += this.score + " ";
 		return retVal.trim();
+	}
+
+	@Override
+	public int compareTo(GamePlayer playerTwo){
+		return Integer.compare(this.score, playerTwo.getScore());
 	}
 	
 }

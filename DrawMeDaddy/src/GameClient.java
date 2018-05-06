@@ -24,6 +24,11 @@ public class GameClient implements Runnable,Constants{
 	private int portNumber;
 	private boolean gameConnected = false;
 
+	private boolean isConnectedToGame = false;
+	private int gameStatus = WAITING_FOR_PLAYERS;
+
+	private static final int TIME_LEFT_PLACEHOLDER = 10;
+
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
 		this.serverAddress = serverAddress;
@@ -81,11 +86,12 @@ public class GameClient implements Runnable,Constants{
 
 			String receivedData = new String(buffer);
 			receivedData = receivedData.trim();
+
 			if(receivedData.startsWith(ACKNOWLEDGEMENT_SIGNAL)){
 				String[] tokens = receivedData.split(SPACE);
 				String name = tokens[1];
 				this.gameConnected = true;
-				this.handle("Player "+name+SPACE+ACKNOWLEDGEMENT_SIGNAL+"!");
+				this.handle(SERVER_PREFIX + name + " has connected!");
 			}else if(!gameConnected){
 				this.sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
 				// this.gameConnected = true;
@@ -100,7 +106,17 @@ public class GameClient implements Runnable,Constants{
 				else if(receivedData.startsWith(SCORE_LIST_SIGNAL)){
 					receivedData = receivedData.replace(SCORE_LIST_SIGNAL,EMPTY_STRING);
 					this.updateScoreList(receivedData);
-				}	
+				}else if(receivedData.startsWith(GOT_THE_WORD_SIGNAL)){
+					this.notifyEveryoneOfPlayerWhoGotTheWord(receivedData);
+				}else if(receivedData.startsWith(WANTS_TO_START_SIGNAL)){
+					this.notifyEveryoneOfPlayerWhoWantsToStart(receivedData);
+				}else if(receivedData.startsWith(PRE_ROUND_SIGNAL)){
+					this.notifyEveryoneThatGameIsStarting();
+				}else if(receivedData.startsWith(ONGOING_STAGE_SIGNAL)){
+					this.notifyEveryoneThatGameHasStarted(receivedData);
+				}else if(receivedData.startsWith(ARTIST_SIGNAL)){
+					this.translateArtistData(receivedData);
+				}
 			}
 
 		}
@@ -112,6 +128,42 @@ public class GameClient implements Runnable,Constants{
 	
 	private void updateWordInGUI(String word){
 		this.gui.showInWordField(word);
+	}
+
+	private void notifyEveryoneOfPlayerWhoGotTheWord(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String playerName = tokens[1];
+		this.handle(SERVER_PREFIX+playerName+" got the correct answer!");
+	}
+
+	private void notifyEveryoneOfPlayerWhoWantsToStart(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String playerName = tokens[1];
+		this.handle(SERVER_PREFIX+playerName+" wants to start!");
+	}
+
+	private void notifyEveryoneThatGameIsStarting(){
+		this.handle(SERVER_PREFIX+" Game is starting!");
+		this.gameStatus = PRE_ROUND;
+	}
+
+	private void notifyEveryoneThatGameHasStarted(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		int currentRound = Integer.parseInt(tokens[1]);
+		int currentStage = Integer.parseInt(tokens[2]);
+		int totalStages = Integer.parseInt(tokens[3]);
+		this.handle(SERVER_PREFIX+" Round: "+currentRound+"/3 Stage: "+currentStage+"/"+totalStages);
+		this.gameStatus = ONGOING_STAGE;
+	}
+
+	private void translateArtistData(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String artistName = tokens[1];
+		this.handle(SERVER_PREFIX+playerName+" is drawing!");
+		System.out.println("PLAYER: "+this.playerName);
+		System.out.println("ARTIST: "+artistName);
+		if(this.playerName.equals(artistName)) this.gui.enableDrawingArea();
+		else this.gui.disableDrawingArea();
 	}
 
 	private void translateCoordinateData(String receivedData){
@@ -131,8 +183,10 @@ public class GameClient implements Runnable,Constants{
 
 	public void send(String message){
 		try{
-			if(isMessageTheWord(message)){
-				sendGameData(WORD_CORRECT_SIGNAL+SPACE+this.playerName);
+			if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message)){
+				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName + SPACE  + TIME_LEFT_PLACEHOLDER);
+			}else if(this.gameStatus == WAITING_FOR_PLAYERS && isMessageRequestToStart(message)){
+				sendGameData(WANTS_TO_START_SIGNAL + SPACE + this.playerName);
 			}else{
 				streamOut.writeUTF(this.playerName+": "+message);
 				streamOut.flush();
@@ -142,8 +196,12 @@ public class GameClient implements Runnable,Constants{
 		}
 	}
 
-	public boolean isMessageTheWord(String message){
+	private boolean isMessageTheWord(String message){
 		return message.toUpperCase().equals(this.wordToGuess);
+	}
+
+	private boolean isMessageRequestToStart(String message){
+		return message.toUpperCase().equals(START_SIGNAL);
 	}
 
 	public void sendGameData(String message){

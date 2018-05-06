@@ -17,6 +17,7 @@ class DrawingArea extends JComponent implements Constants{
 
 	private int oldX, oldY, newX, newY;
 
+	private boolean allowedToDraw = true;
 
 	private static final float DEFAULT_BRUSH_SIZE  = 3.0f;
 	private static final int START_X = 0;
@@ -27,15 +28,18 @@ class DrawingArea extends JComponent implements Constants{
 		this.setDoubleBuffered(false);
 		this.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me){
+				
 				oldX = me.getX();
 				oldY = me.getY();
 				newX = oldX;
 				newY = oldY;
-				String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
-				gameClient.sendGameData(message);
-				graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
-				repaint();
+				if(allowedToDraw){
+					String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+					gameClient.sendGameData(message);
+					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+					graphicsObject.drawLine(oldX,oldY,oldX,oldY);
+					repaint();
+				}
 			}
 		});
 		this.addMouseMotionListener(new MouseMotionListener(){
@@ -44,14 +48,16 @@ class DrawingArea extends JComponent implements Constants{
 				newX = me.getX();
 				newY = me.getY();
 				if(graphicsObject != null){
-					String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
-					gameClient.sendGameData(message);
-					graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-					graphicsObject.drawLine(oldX,oldY,newX,newY);
+					if(allowedToDraw){
+						String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
+						gameClient.sendGameData(message);
+						graphicsObject.setStroke(new BasicStroke(DEFAULT_BRUSH_SIZE,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+						graphicsObject.drawLine(oldX,oldY,newX,newY);
+					}
 				}
 				repaint();
 				oldX = newX;
-				oldY = newY;
+				oldY = newY;				
 			}
 			@Override
 			public void mouseMoved(MouseEvent me){}
@@ -84,6 +90,14 @@ class DrawingArea extends JComponent implements Constants{
 		graphicsObject.setStroke(new BasicStroke(brushSize,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 		this.graphicsObject.drawLine(oldX,oldY,newX,newY);
 		this.repaint();
+	}
+
+	public void disableDrawing(){
+		this.allowedToDraw = false;
+	}
+
+	public void enableDrawing(){
+		this.allowedToDraw = true;
 	}
 
 }

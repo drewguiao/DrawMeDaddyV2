@@ -96,7 +96,10 @@ public class GameClient implements Runnable,Constants{
 				this.sendGameData(CONNECT_SIGNAL+SPACE+this.playerName);
 				// this.gameConnected = true;
 			}else if(gameConnected){
-				if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
+				if(receivedData.startsWith(TIME_SIGNAL)) translateTimeData(receivedData);
+				else if(receivedData.startsWith(START_GUESSING_SIGNAL)) this.handle(SERVER_PREFIX+" start guessing!");
+				else if(receivedData.startsWith(STAGE_TIME_SIGNAL)) translateTimeStatgeData(receivedData);
+				else if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)){
 					String[] tokens = receivedData.split(SPACE);
@@ -160,7 +163,7 @@ public class GameClient implements Runnable,Constants{
 	private void translateArtistData(String receivedData){
 		String[] tokens = receivedData.split(SPACE);
 		String artistName = tokens[1];
-		this.handle(SERVER_PREFIX+artistName+" is drawing!");
+		this.handle(SERVER_PREFIX+artistName+" is the artist!");
 		System.out.println("PLAYER: "+this.playerName);
 		System.out.println("ARTIST: "+artistName);
 		if(this.playerName.equals(artistName)){
@@ -172,6 +175,20 @@ public class GameClient implements Runnable,Constants{
 		}
 	}
 
+
+	private void translateTimeData(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String remainingTime = tokens[1];
+		this.gui.showTimeInTimerField(remainingTime);
+		this.handle(SERVER_PREFIX+" stage starting in "+remainingTime+"...");
+	}
+
+	private void translateTimeStatgeData(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		String remainingTime = tokens[1];
+		this.gui.showTimeInTimerField(remainingTime);
+	}
+
 	private void translateCoordinateData(String receivedData){
 		String[] coordinateInfo = receivedData.split(SPACE);
 		int oldX = Integer.parseInt(coordinateInfo[1]);
@@ -181,6 +198,7 @@ public class GameClient implements Runnable,Constants{
 		float brushSize = Float.parseFloat(coordinateInfo[5]);
 		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize);
 	}
+
 
 	//show message
 	public void handle(String message) {

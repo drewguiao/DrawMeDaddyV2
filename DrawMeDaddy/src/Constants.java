@@ -18,7 +18,9 @@ public interface Constants {
 	public static final String ONGOING_ROUND_SIGNAL = "ONGOING_ROUND";
 	public static final String ONGOING_STAGE_SIGNAL = "ONGOING_STAGE";
 	public static final String TIME_SIGNAL = "TIME";
+	public static final String STAGE_TIME_SIGNAL = "STAGE_TIME";
 	public static final String ARTIST_SIGNAL = "ARTIST";
+	public static final String START_GUESSING_SIGNAL = "START_GUESSING";
 	public static final String SERVER_PREFIX = "**SERVER: ";
 
 	public static final String SPACE = " ";

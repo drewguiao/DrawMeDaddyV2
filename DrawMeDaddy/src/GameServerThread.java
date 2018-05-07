@@ -19,10 +19,12 @@ class GameServerThread extends Thread implements Constants{
 	private int gameStatus = WAITING_FOR_PLAYERS;
 
 	private static final int ROUNDS = 3;
-	private static final int STAGE_TIMER = 60; // 60 seconds
-	private static final int BEFORE_GUESSING_TIMER = 3; //3 seconds
+	private static final int STAGE_TIME_IN_SECONDS = 10; // 60 seconds
+	private static final int WAITING_TIME_IN_SECONDS = 5; //3 seconds
 	private int numberOfRounds = 1;
 	private int numberOfStages = 0;
+	private double timeControllerDeclaration = 0.0000000000d;
+	private TimerClass stageTimer;
 
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
@@ -67,31 +69,46 @@ class GameServerThread extends Thread implements Constants{
 						if(this.numberOfStages == this.players.size()){
 							this.numberOfStages = 0;
 							this.numberOfRounds++;
+							this.playersCache.clear();
 						}else{
 							this.numberOfStages++;
-							GamePlayer artist = retrieveAPlayer();
-							String word = bag.getRandomWord();
-							broadcast(ARTIST_SIGNAL + SPACE + artist.getName());
-							//Timer timer = new Timer(BEFORE_GUESSING_TIMER);
-							//while(timer.getTimeLeft() != 0) broadcast(TIME_SIGNAL+timer.getTimeLeft());
-							
-
-							this.gameStatus = ONGOING_STAGE;
-							broadcast(ONGOING_STAGE_SIGNAL+ SPACE + this.numberOfRounds + SPACE + this.numberOfStages + SPACE + this.players.size());
-							broadcast(WORD_UPDATE_SIGNAL + SPACE + word);
-							// Timer timer = new Timer(STAGE_TIMER);
+							this.gameStatus = PRE_STAGE;
 						}
 					}
 
 				break;
+				case PRE_STAGE:
+					GamePlayer artist = retrieveAPlayer();
+					broadcast(ARTIST_SIGNAL + SPACE + artist.getName());
+					broadcast(ONGOING_STAGE_SIGNAL+ SPACE + this.numberOfRounds + SPACE + this.numberOfStages + SPACE + this.players.size());
+					
+					TimerClass waitingTime = new TimerClass(WAITING_TIME_IN_SECONDS, this);
+					waitingTime.start();
+					
+					while(waitingTime.getCurrentTime() != 0){} //idle time
+
+					String randomWord = bag.getRandomWord();
+					broadcast(WORD_UPDATE_SIGNAL + SPACE + randomWord);
+					broadcast(START_GUESSING_SIGNAL);
+					this.gameStatus = ONGOING_STAGE;
+				break;
 				case ONGOING_STAGE:
-					//while(timer.getTimeLeft() != 0){
-					//// int timeLeft = timer.getTimeLeft();
-					// broadcast(TIME_SIGNAL+SPACE+timeLeft);
+					if(timeControllerDeclaration == 0){
+						stageTimer = new TimerClass(STAGE_TIME_IN_SECONDS, this);
+						timeControllerDeclaration = timeControllerDeclaration + 1.0d;
+						stageTimer.startViaThread();
+					}
+					
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
 					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData);
-					//}
-					//this.gameStatus = PRE_ROUND;
+					
+					if(timeControllerDeclaration != 0){
+						if(stageTimer != null && stageTimer.getCurrentTime() == 0){
+							this.gameStatus = PRE_ROUND;
+							timeControllerDeclaration = 0;
+							
+						}
+					}
 				break;
 				case POST_ROUND:
 					// get next player who will be artist
@@ -186,11 +203,12 @@ class GameServerThread extends Thread implements Constants{
 	}
 
 	private GamePlayer retrieveAPlayer(){
-		for(GamePlayer players: players){
-			if(!playersCache.contains(players)){
-				return players;
+		for(GamePlayer player: players){
+			if(!playersCache.contains(player)){
+				playersCache.add(player);
+				return player;
 			}else{
-				playersCache.add(players);
+
 			}
 		}
 		return null;

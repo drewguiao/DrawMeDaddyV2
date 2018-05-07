@@ -1,31 +1,60 @@
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class TimerClass implements Constants{
-	int seconds;
-	int delay = 1000;
-	int period = 1000;
+public class TimerClass implements Runnable,Constants{
+	private int seconds;
+	private int delay = 1000;
+	private int period = 1000;
+	private GameServerThread server;
 
-	public TimerClass(int secondsParam){
-		this.seconds = ++secondsParam;
+
+	public TimerClass(int seconds, GameServerThread server){
+		this.seconds = ++seconds;
+		this.server = server;
+	}
+
+	public void start(){
+		this.startTimer();
+	}
+
+	
+	public void startTimer(){
 		Timer time = new Timer();
 		time.scheduleAtFixedRate(
 			new  TimerTask(){
 				public void run(){
-					if(seconds==1){
-						System.out.println("Time's Up!");
+					if(seconds==0){
 						time.cancel();
 						time.purge();
 					} else{
 						decreaseSeconds();
-						getCurrentTime();
+						server.broadcast(TIME_SIGNAL+SPACE+getCurrentTime());
 					}
 				}
 				
 			}, delay, period);
 	}
+
+	@Override
+	public void run(){
+		Timer time = new Timer();
+		time.scheduleAtFixedRate(
+			new  TimerTask(){
+				public void run(){
+					if(seconds==0){
+						time.cancel();
+						time.purge();
+					} else{
+						decreaseSeconds();
+						server.broadcast(STAGE_TIME_SIGNAL+SPACE+getCurrentTime());
+					}
+				}
+				
+			}, delay, period);
+	}
+
 	
-	public void divideTimeByN(int N){
+	public void divideTime(int N){
 		if(seconds>0)
 			seconds = seconds/N;
 	}
@@ -35,8 +64,11 @@ public class TimerClass implements Constants{
 	}
 
 	public int getCurrentTime(){
-		System.out.println(seconds);
 		return seconds;
+	}
+
+	public void startViaThread(){
+		this.run();
 	}
 
 

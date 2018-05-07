@@ -5,9 +5,10 @@ public class TimerClass implements Runnable,Constants{
 	private int seconds;
 	private int delay = 1000;
 	private int period = 1000;
+	private static final int MAX_TIME = 60;
 	private GameServerThread server;
-
-
+	private String word;
+	
 	public TimerClass(int seconds, GameServerThread server){
 		this.seconds = ++seconds;
 		this.server = server;
@@ -29,6 +30,7 @@ public class TimerClass implements Runnable,Constants{
 					} else{
 						decreaseSeconds();
 						server.broadcast(TIME_SIGNAL+SPACE+getCurrentTime());
+						//broadcast word here + mixed word
 					}
 				}
 				
@@ -47,6 +49,7 @@ public class TimerClass implements Runnable,Constants{
 					} else{
 						decreaseSeconds();
 						server.broadcast(STAGE_TIME_SIGNAL+SPACE+getCurrentTime());
+						
 					}
 				}
 				
@@ -71,6 +74,9 @@ public class TimerClass implements Runnable,Constants{
 	public void startViaThread(){
 		this.run();
 	}
-
-
+	
+	public int getTimePassed() {
+		return (MAX_TIME - this.seconds);
+	}
+	
 }

@@ -27,7 +27,9 @@ class GameServerThread extends Thread implements Constants{
 	private int numberOfStages = 0;
 	private double timeControllerDeclaration = 0.0000000000d;
 	private TimerClass stageTimer;
-
+	private String randomWord;
+	private boolean isGuessingTime = false;
+	
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
 		this.setUpServer();
@@ -91,17 +93,20 @@ class GameServerThread extends Thread implements Constants{
 					
 					while(waitingTime.getCurrentTime() != 0){System.out.print("");} //idle time
 
-					String randomWord = bag.getRandomWord();
+					this.randomWord = bag.getRandomWord();
 					broadcast(WORD_UPDATE_SIGNAL + SPACE + randomWord);
 					broadcast(START_GUESSING_SIGNAL);
 					this.gameStatus = ONGOING_STAGE;
 				break;
 				case ONGOING_STAGE:
 					if(timeControllerDeclaration == 0){
+						this.isGuessingTime = true;
 						stageTimer = new TimerClass(STAGE_TIME_IN_SECONDS, this);
 						timeControllerDeclaration = timeControllerDeclaration + 1.0d;
 						stageTimer.startViaThread();
 					}
+	
+					
 					
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
 					else if(receivedData.startsWith(CLEAR_CANVAS_SIGNAL)) this.broadcastCanvasClearing();
@@ -230,6 +235,14 @@ class GameServerThread extends Thread implements Constants{
 
 	public void broadcast(String message){
 		for(GamePlayer player: players) this.send(player,message);
+	}
+	
+	public String getWord() {
+		return this.randomWord;
+	}
+	
+	public boolean isGuessingTime() {
+			return isGuessingTime;
 	}
 
 }

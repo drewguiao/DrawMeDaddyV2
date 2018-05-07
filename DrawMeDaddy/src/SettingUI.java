@@ -54,23 +54,34 @@ public class SettingUI{
     
         this.clientEnterButton = new JButton();
         this.clientEnterButton.setIcon(new ImageIcon("images/enter.png"));
-		this.clientEnterButton.setBounds(115,120,173,56);
+		this.clientEnterButton.setBounds(115,140,173,56);
 		this.clientEnterButton.setBorderPainted(false); 
 		this.clientEnterButton.setContentAreaFilled(false); 
 		this.clientEnterButton.setFocusPainted(false); 
         this.clientEnterButton.setOpaque(false);
         
         this.nameField = new JTextField();
-        this.nameField.setText("Enter name here (e.g Paul)");
-        this.nameField.setBounds(100,20,200,20);
+        
+        this.nameField.setBounds(100,30,200,20);
+        this.nameField.setText("pol");
 
         this.ipField = new JTextField();
-        this.ipField.setText("Enter IP here (e.g localhost)");
-        this.ipField.setBounds(100,47,200,20);
+       
+        this.ipField.setBounds(100,75,200,20);
+        this.ipField.setText("localhost");
 
         this.clientPortField = new JTextField();
-        this.clientPortField.setText("Enter port here (e.g 1111)");
-        this.clientPortField.setBounds(100,74,200,20);
+        this.clientPortField.setText("1111");
+        
+        this.clientPortField.setBounds(100,120,200,20);
+
+        JLabel clientName = new JLabel(new ImageIcon("images/client_name.png"));
+        JLabel clientIP = new JLabel(new ImageIcon("images/client_IP.png"));
+        JLabel clientPort = new JLabel(new ImageIcon("images/client_port_number.png"));
+
+        clientName.setBounds(150,5,100,30);
+        clientIP.setBounds(150,50,100,30);
+        clientPort.setBounds(150,95,100,30);
 
         this.clientEnterButton.addMouseListener(new MouseListener(){
         
@@ -105,15 +116,23 @@ public class SettingUI{
             }
         });
 
+        this.frame.add(clientName);
         this.frame.add(nameField);
+        this.frame.add(clientIP);
         this.frame.add(ipField);
+        this.frame.add(clientPort);
         this.frame.add(clientPortField);
+        
         this.frame.add(clientEnterButton);
+        
         this.frame.setVisible(true);
     }
 
     private void promptServerUI(){
         JFrame serverFrame = new JFrame();
+        
+        JLabel portNumberLabel = new JLabel(new ImageIcon("images/port_number.png"));
+        portNumberLabel.setBounds(100,10,200,50);
         
 
 		serverFrame.setSize(400, 200);
@@ -133,8 +152,8 @@ public class SettingUI{
         this.serverEnterButton.setOpaque(false);
 
         this.serverPortField = new JTextField();
-        this.serverPortField.setText("Enter port here (e.g 1111)");
-        this.serverPortField.setBounds(100,20,200,20);
+        this.serverPortField.setText("1111");
+        this.serverPortField.setBounds(100,50,200,20);
 
         this.serverEnterButton.addMouseListener(new MouseListener(){
             
@@ -167,6 +186,7 @@ public class SettingUI{
                 }
             });
 
+        serverFrame.add(portNumberLabel);
         serverFrame.add(serverEnterButton);
         serverFrame.add(serverPortField);
         serverFrame.setVisible(true);

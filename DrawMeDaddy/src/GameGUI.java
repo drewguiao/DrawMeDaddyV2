@@ -14,18 +14,23 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
+
 import java.awt.Font;
+
 class GameGUI implements Constants{
 
 	private GameClient gameClient;
 	private JFrame gameFrame;
 	private Container contentContainer;
-	private JPanel chatPanel,scorePanel, drawingPanel;
+	private JPanel chatPanel,scorePanel, drawingPanel, controlPanel;
 	private DrawingArea drawingArea;
 	private JTextArea chatArea,scoreArea,timerArea,wordArea;
 	private JScrollPane chatScrollPane;
 	private JTextField chatField,wordField,timerField;
 	private JButton sendButton;
+	private BrushSettings brushSettings;
+	private JLabel joseLabel, wordToGuess;
+	
 
 	private static final int SCORE_AREA_ROWS = 10;
 	private static final int SCORE_AREA_COLS = 25;
@@ -81,18 +86,118 @@ class GameGUI implements Constants{
 		this.scorePanel.add(scoreArea);
 		this.scorePanel.add(wordField);
 		this.scorePanel.add(timerField);
+		this.scorePanel.add(joseLabel);
 
 	}
 
 	private void buildDrawingPanel(){
+		this.brushSettings = new BrushSettings();
 		this.drawingPanel = new JPanel();
 		this.drawingPanel.setLayout(new BorderLayout());
 
-		// this.controlPanel = new JPanel();
-		this.drawingArea = new DrawingArea(this.gameClient);
+		this.controlPanel = new JPanel();
+
+		JButton smallBrush = new JButton("S");
+		JButton mediumBrush = new JButton("M");
+		JButton largeBrush = new JButton("L");
+
+		JButton blackBrush = new JButton(" ");
+		blackBrush.setBackground(Color.BLACK);
+		JButton redBrush = new JButton(" ");
+		redBrush.setBackground(Color.RED);
+		JButton blueBrush = new JButton(" ");
+		blueBrush.setBackground(Color.BLUE);
+		JButton clearBrush = new JButton(" ");
+		clearBrush.setBackground(Color.WHITE);
 		
-		// this.drawingPanel.add(this.controlPanel, BorderLayout.NORTH);
+		JButton clearButton = new JButton("Clear canvas");
+		
+		smallBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setSize(10.0f);
+			}
+		});
+		
+		mediumBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setSize(20.0f);
+			}
+		});
+		
+		largeBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setSize(30.0f);
+			}
+		});
+		
+		blackBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setColor(Color.BLACK);
+			}
+		});
+		
+		redBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setColor(Color.RED);
+			}
+		});
+		
+		blueBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setColor(Color.BLUE);
+			}
+		});
+		
+		clearBrush.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				brushSettings.setColor(Color.WHITE);
+			}
+		});
+		
+		clearButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				drawingArea.clear();
+			}
+			
+		});
+		
+		this.controlPanel.add(smallBrush);
+		this.controlPanel.add(mediumBrush);
+		this.controlPanel.add(largeBrush);
+		this.controlPanel.add(blackBrush);
+		this.controlPanel.add(redBrush);
+		this.controlPanel.add(blueBrush);
+		this.controlPanel.add(clearBrush);
+
+		this.drawingArea = new DrawingArea(this.gameClient, this.brushSettings);
+		
+		this.drawingPanel.add(this.controlPanel, BorderLayout.NORTH);
 		this.drawingPanel.add(this.drawingArea, BorderLayout.CENTER);
+		this.drawingPanel.add(clearButton, BorderLayout.SOUTH);
 	}
 
 
@@ -118,6 +223,8 @@ class GameGUI implements Constants{
 
 	private void buildFrame(){
 		this.gameFrame = new JFrame(GAME_TITLE+this.gameClient.getPlayerName());
+		this.gameFrame.setResizable(false);
+		//this.gameFrame.setUndecorated(true);
 		this.contentContainer = gameFrame.getContentPane();
 		this.contentContainer.setLayout(new GridLayout(GRID_LAYOUT_ROWS,GRID_LAYOUT_COLS));
 
@@ -185,7 +292,7 @@ class GameGUI implements Constants{
 	}
 
 	public void showInWordField(String word){
-		this.wordField.setText(word);
+		this.wordToGuess.setText(word);
 	}
 
 	public void showInScoreList(String list){

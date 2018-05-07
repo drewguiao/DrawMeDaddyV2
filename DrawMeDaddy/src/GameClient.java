@@ -28,6 +28,8 @@ public class GameClient implements Runnable,Constants{
 	private boolean isArtist = true;
 	private boolean hasTheAnswer = false;
 
+	private int currentTime = 0;
+
 	private static final int TIME_LEFT_PLACEHOLDER = 10;
 	public GameClient(String name, String serverAddress, int portNumber) {
 		this.playerName = name;
@@ -194,6 +196,7 @@ public class GameClient implements Runnable,Constants{
 	private void translateTimeStatgeData(String receivedData){
 		String[] tokens = receivedData.split(SPACE);
 		String remainingTime = tokens[1];
+		this.currentTime = Integer.parseInt(remainingTime);
 		this.gui.showTimeInTimerField(remainingTime);
 	}
 
@@ -237,7 +240,7 @@ public class GameClient implements Runnable,Constants{
 	public void send(String message){
 		try{
 			if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message) && !isArtist && !hasTheAnswer){
-				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName + SPACE  + TIME_LEFT_PLACEHOLDER);
+				sendGameData(WORD_CORRECT_SIGNAL + SPACE + this.playerName + SPACE  + this.currentTime);
 				this.hasTheAnswer = true;
 			}else if(this.gameStatus == ONGOING_STAGE && isMessageTheWord(message) && !isArtist && hasTheAnswer){
 				//does nothing

@@ -101,11 +101,7 @@ public class GameClient implements Runnable,Constants{
 				else if(receivedData.startsWith(STAGE_TIME_SIGNAL)) translateTimeStatgeData(receivedData);
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_A)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
-				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)){
-					String[] tokens = receivedData.split(SPACE);
-					this.wordToGuess = tokens[1];
-					this.updateWordInGUI(wordToGuess);
-				}
+				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)) translateWordData(receivedData);
 				else if(receivedData.startsWith(SCORE_LIST_SIGNAL)){
 					receivedData = receivedData.replace(SCORE_LIST_SIGNAL,EMPTY_STRING);
 					this.updateScoreList(receivedData);
@@ -187,6 +183,27 @@ public class GameClient implements Runnable,Constants{
 		String[] tokens = receivedData.split(SPACE);
 		String remainingTime = tokens[1];
 		this.gui.showTimeInTimerField(remainingTime);
+	}
+
+
+	private void translateWordData(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		this.wordToGuess = tokens[1];
+		if(this.isArtist){
+			this.updateWordInGUI(wordToGuess);	
+		}else{
+			String filteredWord = filter(wordToGuess);
+			this.updateWordInGUI(filteredWord);
+		}
+	}
+
+	private String filter(String wordToGuess){
+		String filteredString = "";
+		int wordLength = wordToGuess.length();
+		for(int i = 0; i < wordLength; i++){
+			filteredString += "* ";
+		}
+		return filteredString;
 	}
 
 	private void translateCoordinateData(String receivedData){

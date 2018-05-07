@@ -8,6 +8,10 @@ public class BrushSettings {
 	public BrushSettings() {
 		this.size = 5.0f;
 		this.color = Color.BLACK;
+		
+		System.out.println("BLACK: " +this.color.toString());
+		System.out.println("RED: " +Color.RED.toString());
+		System.out.println("BLUE: " +Color.BLUE.toString());
 	}
 	
 	public float getSize() {

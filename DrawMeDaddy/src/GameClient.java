@@ -233,9 +233,18 @@ public class GameClient implements Runnable,Constants{
 		int newX = Integer.parseInt(coordinateInfo[3]);
 		int newY = Integer.parseInt(coordinateInfo[4]);
 		float brushSize = Float.parseFloat(coordinateInfo[5]);
+		String color = coordinateInfo[6];
+		Color brushColor = Color.BLACK;
+		if(color.equals("java.awt.Color[r=0,g=0,b=0]")) {
+			brushColor = Color.BLACK;
+		}else if(color.equals("java.awt.Color[r=255,g=0,b=0]")) {
+			brushColor = Color.RED;
+		}else if(color.equals("java.awt.Color[r=0,g=0,b=255]")) {
+			brushColor = Color.BLUE;
+		}
 		//add color here
 		//add color in parameter
-		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize);
+		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize,brushColor);
 	}
 
 

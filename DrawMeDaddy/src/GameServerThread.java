@@ -87,9 +87,9 @@ class GameServerThread extends Thread implements Constants{
 					
 					TimerClass waitingTime = new TimerClass(WAITING_TIME_IN_SECONDS, this);
 					waitingTime.start();
+					broadcast(CLEAR_CANVAS_SIGNAL);
 					
 					while(waitingTime.getCurrentTime() != 0){System.out.print("");} //idle time
-
 
 					String randomWord = bag.getRandomWord();
 					broadcast(WORD_UPDATE_SIGNAL + SPACE + randomWord);
@@ -147,7 +147,8 @@ class GameServerThread extends Thread implements Constants{
 		int newX = Integer.parseInt(coordinateData[3]);
 		int newY = Integer.parseInt(coordinateData[4]);
 		float brushSize = Float.parseFloat(coordinateData[5]);
-		String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize);
+		String brushColor = coordinateData[6];
+		String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize+SPACE+brushColor);
 		this.broadcast(message);
 	}
 

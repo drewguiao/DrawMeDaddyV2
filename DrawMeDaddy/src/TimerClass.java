@@ -6,6 +6,7 @@ public class TimerClass implements Runnable,Constants{
 	private int delay = 1000;
 	private int period = 1000;
 	private GameServerThread server;
+	Timer time = new Timer();
 
 
 	public TimerClass(int seconds, GameServerThread server){
@@ -37,7 +38,6 @@ public class TimerClass implements Runnable,Constants{
 
 	@Override
 	public void run(){
-		Timer time = new Timer();
 		time.scheduleAtFixedRate(
 			new  TimerTask(){
 				public void run(){
@@ -73,4 +73,7 @@ public class TimerClass implements Runnable,Constants{
 	}
 
 
+	public void forceTimer(){
+		this.seconds = 1;
+	}
 }

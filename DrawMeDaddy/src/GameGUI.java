@@ -30,6 +30,8 @@ class GameGUI implements Constants{
 	private JButton sendButton,clearButton;
 	private BrushSettings brushSettings;
 	
+	private JButton smallBrush, mediumBrush, largeBrush;
+	private JButton blackBrush, redBrush, blueBrush, clearBrush;
 
 	private static final int SCORE_AREA_ROWS = 10;
 	private static final int SCORE_AREA_COLS = 25;
@@ -95,17 +97,17 @@ class GameGUI implements Constants{
 
 		this.controlPanel = new JPanel();
 
-		JButton smallBrush = new JButton("S");
-		JButton mediumBrush = new JButton("M");
-		JButton largeBrush = new JButton("L");
+		smallBrush = new JButton("S");
+		mediumBrush = new JButton("M");
+		largeBrush = new JButton("L");
 
-		JButton blackBrush = new JButton(" ");
+		blackBrush = new JButton(" ");
 		blackBrush.setBackground(Color.BLACK);
-		JButton redBrush = new JButton(" ");
+		redBrush = new JButton(" ");
 		redBrush.setBackground(Color.RED);
-		JButton blueBrush = new JButton(" ");
+		blueBrush = new JButton(" ");
 		blueBrush.setBackground(Color.BLUE);
-		JButton clearBrush = new JButton(" ");
+		clearBrush = new JButton(" ");
 		clearBrush.setBackground(Color.WHITE);
 		
 		clearButton = new JButton("Clear canvas");
@@ -303,6 +305,28 @@ class GameGUI implements Constants{
 	public void disableDrawingArea(){
 		this.drawingArea.disableDrawing();
 	}
+
+	public void disableControlPanel(){
+		this.smallBrush.setEnabled(false);
+		this.mediumBrush.setEnabled(false);
+		this.largeBrush.setEnabled(false);
+		this.blackBrush.setEnabled(false);
+		this.redBrush.setEnabled(false);
+		this.blueBrush.setEnabled(false);
+		this.clearBrush.setEnabled(false);
+		this.controlPanel.setEnabled(false);
+	}
+
+	public void enableControlPanel(){
+		this.smallBrush.setEnabled(true);
+		this.mediumBrush.setEnabled(true);
+		this.largeBrush.setEnabled(true);
+		this.blackBrush.setEnabled(true);
+		this.redBrush.setEnabled(true);
+		this.blueBrush.setEnabled(true);
+		this.clearBrush.setEnabled(true);
+		this.controlPanel.setEnabled(true);
+	}	
 
 	public void enableDrawingArea(){
 		this.drawingArea.enableDrawing();

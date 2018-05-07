@@ -104,6 +104,8 @@ class GameGUI implements Constants{
 		JButton clearBrush = new JButton(" ");
 		clearBrush.setBackground(Color.WHITE);
 		
+		JButton clearButton = new JButton("Clear canvas");
+		
 		smallBrush.addActionListener(new ActionListener() {
 
 			@Override
@@ -167,6 +169,15 @@ class GameGUI implements Constants{
 			}
 		});
 		
+		clearButton.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				// TODO Auto-generated method stub
+				drawingArea.clear();
+			}
+			
+		});
 		
 		
 
@@ -183,6 +194,7 @@ class GameGUI implements Constants{
 		
 		this.drawingPanel.add(this.controlPanel, BorderLayout.NORTH);
 		this.drawingPanel.add(this.drawingArea, BorderLayout.CENTER);
+		this.drawingPanel.add(clearButton, BorderLayout.SOUTH);
 	}
 
 

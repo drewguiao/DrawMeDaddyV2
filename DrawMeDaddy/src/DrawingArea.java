@@ -75,7 +75,7 @@ class DrawingArea extends JComponent implements Constants{
 		g.drawImage(image, START_X, START_Y, null);
 	}
 
-	private void clear(){
+	public void clear(){
 		graphicsObject.setPaint(Color.WHITE);
 		graphicsObject.fillRect(START_X,START_Y,this.getSize().width,this.getSize().height);
 		graphicsObject.setPaint(brushSettings.getColor());

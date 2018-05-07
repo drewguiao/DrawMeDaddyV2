@@ -7,7 +7,7 @@ public class TimerClass implements Runnable,Constants{
 	private int period = 1000;
 	private static final int MAX_TIME = 60;
 	private GameServerThread server;
-
+	Timer time = new Timer();
 	private String word;
 	
 

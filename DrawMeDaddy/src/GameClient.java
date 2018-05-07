@@ -105,6 +105,9 @@ public class GameClient implements Runnable,Constants{
 				else if(receivedData.startsWith(SCORE_LIST_SIGNAL)){
 					receivedData = receivedData.replace(SCORE_LIST_SIGNAL+" ",EMPTY_STRING);
 					this.updateScoreList(receivedData);
+				}else if(receivedData.startsWith(FINAL_SCORE_LIST_SIGNAL)){
+					receivedData = receivedData.replace(FINAL_SCORE_LIST_SIGNAL+" ",EMPTY_STRING);
+					this.showFinalScoreList(receivedData);
 				}else if(receivedData.startsWith(GOT_THE_WORD_SIGNAL)){
 					this.notifyEveryoneOfPlayerWhoGotTheWord(receivedData);
 				}else if(receivedData.startsWith(WANTS_TO_START_SIGNAL)){
@@ -127,6 +130,15 @@ public class GameClient implements Runnable,Constants{
 	
 	private void updateWordInGUI(String word){
 		this.gui.showInWordField(word);
+	}
+
+	private void showFinalScoreList(String receivedData){
+		String[] tokens = receivedData.split(SPACE);
+		this.handle(SERVER_PREFIX+"GAME OVER!\n\n"+"Final Scores:");
+		for(int i=0; i<(tokens.length+1)/2; i++)
+			this.handle(tokens[i]+": "+tokens[i+1]+"\n");
+		//for(int i=0; i<tokens.length; i++)
+		//	this.handle(i+" "+tokens[i]);
 	}
 
 	private void notifyEveryoneOfPlayerWhoGotTheWord(String receivedData){

@@ -18,6 +18,8 @@ class GameServerThread extends Thread implements Constants{
 	private BagOfWords bag = new BagOfWords();
 	private int gameStatus = WAITING_FOR_PLAYERS;
 
+	private volatile boolean running = true;
+
 	private static final int ROUNDS = 3;
 	private static final int STAGE_TIME_IN_SECONDS = 60; // 60 seconds
 	private static final int WAITING_TIME_IN_SECONDS = 5; //3 seconds
@@ -45,7 +47,7 @@ class GameServerThread extends Thread implements Constants{
 
 	@Override
 	public void run(){
-		while(true){
+		while(running){
 			byte[] buffer = new byte[BYTE_MAX_SIZE];
 			DatagramPacket packet = new DatagramPacket(buffer,buffer.length);
 			try{
@@ -66,6 +68,7 @@ class GameServerThread extends Thread implements Constants{
 					if(this.numberOfRounds == ROUNDS && this.numberOfStages == this.players.size()){
 						this.gameStatus = END_GAME;
 					}else{
+
 						if(this.numberOfStages == this.players.size()){
 							this.numberOfStages = 0;
 							this.numberOfRounds++;
@@ -85,7 +88,8 @@ class GameServerThread extends Thread implements Constants{
 					TimerClass waitingTime = new TimerClass(WAITING_TIME_IN_SECONDS, this);
 					waitingTime.start();
 					
-					while(waitingTime.getCurrentTime() != 0){} //idle time
+					while(waitingTime.getCurrentTime() != 0){System.out.print("");} //idle time
+
 
 					String randomWord = bag.getRandomWord();
 					broadcast(WORD_UPDATE_SIGNAL + SPACE + randomWord);
@@ -116,8 +120,10 @@ class GameServerThread extends Thread implements Constants{
 					// add a 3 second timer shown to everyone
 				break;
 				case END_GAME:
-					// after 3 rounds
-					// get summary of score 
+					for(GamePlayer player: players){
+						broadcast(FINAL_SCORE_LIST_SIGNAL+SPACE+player.getName()+SPACE+player.getScore());
+					}
+					this.terminate(); 
 				break;
 			}
 
@@ -141,6 +147,10 @@ class GameServerThread extends Thread implements Constants{
 			// 	broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
 			// }
 		}
+	}
+
+	private void terminate(){
+		this.running = false;
 	}
 
 	private void broadCastCoordinateData(String receivedData){

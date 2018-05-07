@@ -18,6 +18,7 @@ class DrawingArea extends JComponent implements Constants{
 
 	private int oldX, oldY, newX, newY;
 
+	private boolean allowedToDraw = true;
 
 	private static final float DEFAULT_BRUSH_SIZE  = 5.0f;
 	private static final int START_X = 0;
@@ -29,6 +30,7 @@ class DrawingArea extends JComponent implements Constants{
 		this.setDoubleBuffered(false);
 		this.addMouseListener(new MouseAdapter(){
 			public void mousePressed(MouseEvent me){
+				
 				oldX = me.getX();
 				oldY = me.getY();
 				newX = oldX;
@@ -55,7 +57,7 @@ class DrawingArea extends JComponent implements Constants{
 				}
 				repaint();
 				oldX = newX;
-				oldY = newY;
+				oldY = newY;				
 			}
 			@Override
 			public void mouseMoved(MouseEvent me){}
@@ -89,6 +91,14 @@ class DrawingArea extends JComponent implements Constants{
 		graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 		this.graphicsObject.drawLine(oldX,oldY,newX,newY);
 		this.repaint();
+	}
+
+	public void disableDrawing(){
+		this.allowedToDraw = false;
+	}
+
+	public void enableDrawing(){
+		this.allowedToDraw = true;
 	}
 
 }

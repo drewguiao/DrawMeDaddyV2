@@ -15,12 +15,7 @@ import java.awt.event.AdjustmentEvent;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
 
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionListener;
-
-import java.awt.*;
-import javax.swing.*;
+import java.awt.Font;
 
 class GameGUI implements Constants{
 
@@ -29,7 +24,7 @@ class GameGUI implements Constants{
 	private Container contentContainer;
 	private JPanel chatPanel,scorePanel, drawingPanel, controlPanel;
 	private DrawingArea drawingArea;
-	private JTextArea chatArea,scoreArea;
+	private JTextArea chatArea,scoreArea,timerArea,wordArea;
 	private JScrollPane chatScrollPane;
 	private JTextField chatField,wordField,timerField;
 	private JButton sendButton;
@@ -46,6 +41,7 @@ class GameGUI implements Constants{
 	private static final int GRID_LAYOUT_COLS = 3;
 	private static final int FRAME_X_SIZE = 1000;
 	private static final int FRAME_Y_SIZE = 500;
+	private static final int FONT_SIZE = 50;
 	
 	private static final String SEND_STRING = "SEND";
 	private static final String GAME_TITLE = "Draw Me Daddy: ";
@@ -70,23 +66,22 @@ class GameGUI implements Constants{
 		this.scoreArea.setEditable(false);
 		this.scoreArea.setText("SCORE AREA");
 
-		this.wordField = new JTextField(TEXT_FIELD_COLS);
-		this.wordField.setEnabled(false);
-		this.wordField.setText("WORD TO GUESS AREA");
+		Font wordFont = new Font("Sans Serif", Font.BOLD, FONT_SIZE/2);
+		this.wordField = new JTextField();
+		this.wordField.setSize(300,TEXT_FIELD_COLS);
+		this.wordField.setEditable(false);
+		this.wordField.setFont(wordFont);
+		this.wordField.setHorizontalAlignment(JTextField.CENTER);
+		this.wordField.setText("Word Field");
 
-		this.timerField = new JTextField(TEXT_FIELD_COLS);
-		this.timerField.setEnabled(false);
-		this.timerField.setText("TimerField");
-		
-		
-		
-		
-		this.joseLabel = new JLabel();
-		this.joseLabel.setIcon(new ImageIcon("images/jose.png"));
-		this.wordToGuess = new JLabel("", SwingConstants.CENTER);
-		this.wordToGuess.setBounds(125, 64, 107, 30);
-		this.joseLabel.add(wordToGuess);
-	
+		Font timerFont = new Font("Sans Serif",Font.BOLD, FONT_SIZE);
+
+		this.timerField = new JTextField();
+		this.timerField.setSize(300,TEXT_FIELD_COLS);
+		this.timerField.setEditable(false);
+		this.timerField.setFont(timerFont);
+		this.timerField.setHorizontalAlignment(JTextField.CENTER);
+		this.timerField.setText("Timer Field");
 
 		this.scorePanel.add(scoreArea);
 		this.scorePanel.add(wordField);
@@ -302,6 +297,18 @@ class GameGUI implements Constants{
 
 	public void showInScoreList(String list){
 		this.scoreArea.setText(list);
+	}
+
+	public void showTimeInTimerField(String time){
+		this.timerField.setText(time);
+	}
+
+	public void disableDrawingArea(){
+		this.drawingArea.disableDrawing();
+	}
+
+	public void enableDrawingArea(){
+		this.drawingArea.enableDrawing();
 	}
 
 }

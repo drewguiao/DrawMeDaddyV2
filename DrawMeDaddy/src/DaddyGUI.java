@@ -260,14 +260,4 @@ public class DaddyGUI {
 		
 	}
 
-
-	public void buildInstructions() {
-		
-	}
-	
-	
-	
-	
-	
-	
 }

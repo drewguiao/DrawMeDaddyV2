@@ -22,6 +22,7 @@ public interface Constants {
 	public static final String STAGE_TIME_SIGNAL = "STAGE_TIME";
 	public static final String ARTIST_SIGNAL = "ARTIST";
 	public static final String START_GUESSING_SIGNAL = "START_GUESSING";
+	public static final String CLEAR_CANVAS_SIGNAL = "CLEAR_CANVAS";
 	public static final String SERVER_PREFIX = "**SERVER: ";
 
 	public static final String SPACE = " ";

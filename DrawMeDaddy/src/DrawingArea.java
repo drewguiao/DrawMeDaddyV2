@@ -35,12 +35,15 @@ class DrawingArea extends JComponent implements Constants{
 				oldY = me.getY();
 				newX = oldX;
 				newY = oldY;
-				String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
-				gameClient.sendGameData(message);
-				graphicsObject.setPaint(brushSettings.getColor());
-				graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-				graphicsObject.drawLine(oldX,oldY,oldX,oldY);
-				repaint();
+				if(allowedToDraw) {
+					String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize();
+					gameClient.sendGameData(message);
+					graphicsObject.setPaint(brushSettings.getColor());
+					graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+					graphicsObject.drawLine(oldX,oldY,oldX,oldY);
+					repaint();
+				}
+				
 			}
 		});
 		this.addMouseMotionListener(new MouseMotionListener(){
@@ -49,11 +52,14 @@ class DrawingArea extends JComponent implements Constants{
 				newX = me.getX();
 				newY = me.getY();
 				if(graphicsObject != null){
-					String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+DEFAULT_BRUSH_SIZE;
-					gameClient.sendGameData(message);
-					graphicsObject.setPaint(brushSettings.getColor());
-					graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
-					graphicsObject.drawLine(oldX,oldY,newX,newY);
+					if(allowedToDraw) {
+						String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize();
+						gameClient.sendGameData(message);
+						graphicsObject.setPaint(brushSettings.getColor());
+						graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+						graphicsObject.drawLine(oldX,oldY,newX,newY);	
+					}
+					
 				}
 				repaint();
 				oldX = newX;

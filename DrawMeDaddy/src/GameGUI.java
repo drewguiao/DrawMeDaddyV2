@@ -34,6 +34,8 @@ class GameGUI implements Constants{
 	private JTextField chatField,wordField,timerField;
 	private JButton sendButton;
 	private BrushSettings brushSettings;
+	private JLabel joseLabel, wordToGuess;
+	
 
 	private static final int SCORE_AREA_ROWS = 10;
 	private static final int SCORE_AREA_COLS = 25;
@@ -75,12 +77,21 @@ class GameGUI implements Constants{
 		this.timerField = new JTextField(TEXT_FIELD_COLS);
 		this.timerField.setEnabled(false);
 		this.timerField.setText("TimerField");
-
-
+		
+		
+		
+		
+		this.joseLabel = new JLabel();
+		this.joseLabel.setIcon(new ImageIcon("images/jose.png"));
+		this.wordToGuess = new JLabel("", SwingConstants.CENTER);
+		this.wordToGuess.setBounds(125, 64, 107, 30);
+		this.joseLabel.add(wordToGuess);
+	
 
 		this.scorePanel.add(scoreArea);
 		this.scorePanel.add(wordField);
 		this.scorePanel.add(timerField);
+		this.scorePanel.add(joseLabel);
 
 	}
 
@@ -179,9 +190,6 @@ class GameGUI implements Constants{
 			
 		});
 		
-		
-
-
 		this.controlPanel.add(smallBrush);
 		this.controlPanel.add(mediumBrush);
 		this.controlPanel.add(largeBrush);
@@ -220,7 +228,7 @@ class GameGUI implements Constants{
 
 	private void buildFrame(){
 		this.gameFrame = new JFrame(GAME_TITLE+this.gameClient.getPlayerName());
-		this.gameFrame.setResizable(true);
+		this.gameFrame.setResizable(false);
 		//this.gameFrame.setUndecorated(true);
 		this.contentContainer = gameFrame.getContentPane();
 		this.contentContainer.setLayout(new GridLayout(GRID_LAYOUT_ROWS,GRID_LAYOUT_COLS));
@@ -289,7 +297,7 @@ class GameGUI implements Constants{
 	}
 
 	public void showInWordField(String word){
-		this.wordField.setText(word);
+		this.wordToGuess.setText(word);
 	}
 
 	public void showInScoreList(String list){

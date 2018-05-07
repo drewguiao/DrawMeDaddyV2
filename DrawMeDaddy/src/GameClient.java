@@ -103,7 +103,7 @@ public class GameClient implements Runnable,Constants{
 				else if(receivedData.startsWith(COORDINATE_SIGNAL_B)) translateCoordinateData(receivedData);
 				else if(receivedData.startsWith(WORD_UPDATE_SIGNAL)) translateWordData(receivedData);
 				else if(receivedData.startsWith(SCORE_LIST_SIGNAL)){
-					receivedData = receivedData.replace(SCORE_LIST_SIGNAL,EMPTY_STRING);
+					receivedData = receivedData.replace(SCORE_LIST_SIGNAL+" ",EMPTY_STRING);
 					this.updateScoreList(receivedData);
 				}else if(receivedData.startsWith(GOT_THE_WORD_SIGNAL)){
 					this.notifyEveryoneOfPlayerWhoGotTheWord(receivedData);

@@ -19,7 +19,7 @@ class GameServerThread extends Thread implements Constants{
 	private int gameStatus = WAITING_FOR_PLAYERS;
 
 	private static final int ROUNDS = 3;
-	private static final int STAGE_TIME_IN_SECONDS = 10; // 60 seconds
+	private static final int STAGE_TIME_IN_SECONDS = 60; // 60 seconds
 	private static final int WAITING_TIME_IN_SECONDS = 5; //3 seconds
 	private int numberOfRounds = 1;
 	private int numberOfStages = 0;
@@ -100,7 +100,7 @@ class GameServerThread extends Thread implements Constants{
 					}
 					
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
-					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData);
+					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData,stageTimer);
 					
 					if(timeControllerDeclaration != 0){
 						if(stageTimer != null && stageTimer.getCurrentTime() == 0){
@@ -161,8 +161,13 @@ class GameServerThread extends Thread implements Constants{
 		GamePlayer player = new GamePlayer(name, packet.getAddress(),packet.getPort());
 		this.players.add(player);
 		this.broadcast(ACKNOWLEDGEMENT_SIGNAL+SPACE+name);
-		// String word = bag.getRandomWord();
-		// this.broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
+		broadcastScores();
+	}
+
+	private void broadcastScores(){
+		String scoreList = "";
+		for(GamePlayer p:players) scoreList += p + NEW_LINE;
+		broadcast(SCORE_LIST_SIGNAL+SPACE+scoreList);
 	}
 
 	private void broadcastRequestToStartGame(String receivedData){
@@ -178,14 +183,15 @@ class GameServerThread extends Thread implements Constants{
 	}
 
 	//To do: add Timer timer as parameter
-	private void broadcastCorrectPlayer(String receivedData){
+	private void broadcastCorrectPlayer(String receivedData, TimerClass timer){
 		String[] tokens = receivedData.split(SPACE);
 		String playerName = tokens[1];
 		int score = Integer.parseInt(tokens[2]);
 		GamePlayer player = findPlayerByName(playerName);
 		player.updateScore(score);
-		//timer.reduceTime(score);
+		timer.divideTime(players.size());
 		broadcast(GOT_THE_WORD_SIGNAL + SPACE + playerName);
+		broadcastScores();
 	}
 
 	private GamePlayer findPlayerByName(String playerName){

@@ -28,6 +28,8 @@ class GameServerThread extends Thread implements Constants{
 	private double timeControllerDeclaration = 0.0000000000d;
 	private TimerClass stageTimer;
 	private int numberOfPlayersAnsweredCorrectly = 0;
+	private String randomWord;
+	private boolean isGuessingTime = false;
 
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
@@ -89,21 +91,24 @@ class GameServerThread extends Thread implements Constants{
 					
 					TimerClass waitingTime = new TimerClass(WAITING_TIME_IN_SECONDS, this);
 					waitingTime.start();
+					broadcast(CLEAR_CANVAS_SIGNAL);
 					
 					while(waitingTime.getCurrentTime() != 0){System.out.print("");} //idle time
 
-
-					String randomWord = bag.getRandomWord();
+					this.randomWord = bag.getRandomWord();
 					broadcast(WORD_UPDATE_SIGNAL + SPACE + randomWord);
 					broadcast(START_GUESSING_SIGNAL);
 					this.gameStatus = ONGOING_STAGE;
 				break;
 				case ONGOING_STAGE:
 					if(timeControllerDeclaration == 0){
+						this.isGuessingTime = true;
 						stageTimer = new TimerClass(STAGE_TIME_IN_SECONDS, this);
 						timeControllerDeclaration = timeControllerDeclaration + 1.0d;
 						stageTimer.startViaThread();
 					}
+	
+					
 					
 					
 
@@ -155,7 +160,8 @@ class GameServerThread extends Thread implements Constants{
 		int newX = Integer.parseInt(coordinateData[3]);
 		int newY = Integer.parseInt(coordinateData[4]);
 		float brushSize = Float.parseFloat(coordinateData[5]);
-		String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize);
+		String brushColor = coordinateData[6];
+		String message = new String(identifier+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSize+SPACE+brushColor);
 		this.broadcast(message);
 	}
 
@@ -237,6 +243,14 @@ class GameServerThread extends Thread implements Constants{
 
 	public void broadcast(String message){
 		for(GamePlayer player: players) this.send(player,message);
+	}
+	
+	public String getWord() {
+		return this.randomWord;
+	}
+	
+	public boolean isGuessingTime() {
+			return isGuessingTime;
 	}
 
 }

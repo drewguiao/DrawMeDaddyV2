@@ -67,9 +67,9 @@ class GameGUI implements Constants{
 		this.scoreArea.setEditable(false);
 		this.scoreArea.setText("SCORE AREA");
 
-		Font wordFont = new Font("Sans Serif", Font.BOLD, FONT_SIZE/2);
-		this.wordField = new JTextField();
-		this.wordField.setSize(300,TEXT_FIELD_COLS);
+		Font wordFont = new Font("Sans Serif", Font.BOLD, FONT_SIZE/4);
+		this.wordField = new JTextField(TEXT_FIELD_COLS);
+//		this.wordField.setSize(300,TEXT_FIELD_COLS);
 		this.wordField.setEditable(false);
 		this.wordField.setFont(wordFont);
 		this.wordField.setHorizontalAlignment(JTextField.CENTER);
@@ -117,7 +117,7 @@ class GameGUI implements Constants{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				brushSettings.setSize(10.0f);
+				brushSettings.setSize(5.0f);
 			}
 		});
 		
@@ -126,7 +126,7 @@ class GameGUI implements Constants{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				brushSettings.setSize(20.0f);
+				brushSettings.setSize(10.0f);
 			}
 		});
 		
@@ -135,7 +135,7 @@ class GameGUI implements Constants{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
-				brushSettings.setSize(30.0f);
+				brushSettings.setSize(20.0f);
 			}
 		});
 		
@@ -288,11 +288,9 @@ class GameGUI implements Constants{
 		return adjustmentListener;
 	}
 
-	public void paintOnComponent(int oldX, int oldY, int newX, int newY, float brushSize){
-		this.drawingArea.draw(oldX,oldY,newX,newY,brushSize);
+	public void paintOnComponent(int oldX, int oldY, int newX, int newY, float brushSize, Color brushColor){
+		this.drawingArea.draw(oldX,oldY,newX,newY,brushSize,brushColor);
 	}
-
-
 
 	public void showInScoreList(String list){
 		this.scoreArea.setText(list);

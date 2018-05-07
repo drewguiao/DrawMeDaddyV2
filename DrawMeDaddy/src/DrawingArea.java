@@ -36,7 +36,7 @@ class DrawingArea extends JComponent implements Constants{
 				newX = oldX;
 				newY = oldY;
 				if(allowedToDraw) {
-					String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize();
+					String message = COORDINATE_SIGNAL_A+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize()+SPACE+brushSettings.getColor().toString();
 					gameClient.sendGameData(message);
 					graphicsObject.setPaint(brushSettings.getColor());
 					graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
@@ -53,7 +53,7 @@ class DrawingArea extends JComponent implements Constants{
 				newY = me.getY();
 				if(graphicsObject != null){
 					if(allowedToDraw) {
-						String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize();
+						String message = COORDINATE_SIGNAL_B+SPACE+oldX+SPACE+oldY+SPACE+newX+SPACE+newY+SPACE+brushSettings.getSize()+SPACE+brushSettings.getColor().toString();
 						gameClient.sendGameData(message);
 						graphicsObject.setPaint(brushSettings.getColor());
 						graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
@@ -92,9 +92,9 @@ class DrawingArea extends JComponent implements Constants{
 		repaint();
 	}
 
-	public void draw(int oldX, int oldY, int newX, int newY, float brushSize){
-		graphicsObject.setPaint(brushSettings.getColor());
-		graphicsObject.setStroke(new BasicStroke(brushSettings.getSize(),BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
+	public void draw(int oldX, int oldY, int newX, int newY, float brushSize, Color brushColor){
+		graphicsObject.setPaint(brushColor);
+		graphicsObject.setStroke(new BasicStroke(brushSize,BasicStroke.CAP_ROUND,BasicStroke.JOIN_ROUND));
 		this.graphicsObject.drawLine(oldX,oldY,newX,newY);
 		this.repaint();
 	}

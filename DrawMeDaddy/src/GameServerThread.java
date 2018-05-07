@@ -104,6 +104,7 @@ class GameServerThread extends Thread implements Constants{
 					}
 					
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
+					else if(receivedData.startsWith(CLEAR_CANVAS_SIGNAL)) this.broadcastCanvasClearing();
 					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData,stageTimer);
 					
 					if(timeControllerDeclaration != 0){
@@ -127,30 +128,15 @@ class GameServerThread extends Thread implements Constants{
 				break;
 			}
 
-
-			// if(receivedData.startsWith(COORDINATE_SIGNAL)) broadCastCoordinateData(receivedData);
-			// }else if(receivedData.startsWith(CONNECT_SIGNAL)) processRequest(receivedData);	
-			// else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)){
-			// 	String[] tokens = receivedData.split(SPACE);
-			// 	String playerName = tokens[1];
-			// 	broadcast(GOT_THE_WORD_SIGNAL+SPACE+playerName);
-			// 	for(GamePlayer player:players){
-			// 		if(player.getName().equals(playerName)){
-			// 			player.updateScore(10);
-			// 			break;
-			// 		}
-			// 	}
-			// 	String scoreList = "";
-			// 	for(GamePlayer player:players) scoreList += player + NEW_LINE;
-			// 	broadcast(SCORE_LIST_SIGNAL+SPACE+scoreList);
-			// 	String word = bag.getRandomWord();
-			// 	broadcast(WORD_UPDATE_SIGNAL+SPACE+word);
-			// }
 		}
 	}
 
 	private void terminate(){
 		this.running = false;
+	}
+	
+	private void broadcastCanvasClearing() {
+		broadcast(CLEAR_CANVAS_SIGNAL);
 	}
 
 	private void broadCastCoordinateData(String receivedData){

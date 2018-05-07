@@ -1,4 +1,5 @@
 import java.util.Scanner;
+import java.awt.Color;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -120,6 +121,8 @@ public class GameClient implements Runnable,Constants{
 					this.notifyEveryoneThatGameHasStarted(receivedData);
 				}else if(receivedData.startsWith(ARTIST_SIGNAL)){
 					this.translateArtistData(receivedData);
+				}else if(receivedData.startsWith(CLEAR_CANVAS_SIGNAL)) {
+					this.gui.clearCanvas();
 				}
 			}
 
@@ -179,9 +182,11 @@ public class GameClient implements Runnable,Constants{
 		if(this.playerName.equals(artistName)){
 			this.gui.enableDrawingArea();
 			this.isArtist = true;
+			this.gui.enableClearing();
 		}else{
 			this.gui.disableDrawingArea();
 			this.isArtist = false;
+			this.gui.disableClearing();
 		}
 	}
 
@@ -228,6 +233,8 @@ public class GameClient implements Runnable,Constants{
 		int newX = Integer.parseInt(coordinateInfo[3]);
 		int newY = Integer.parseInt(coordinateInfo[4]);
 		float brushSize = Float.parseFloat(coordinateInfo[5]);
+		//add color here
+		//add color in parameter
 		this.gui.paintOnComponent(oldX,oldY,newX,newY,brushSize);
 	}
 

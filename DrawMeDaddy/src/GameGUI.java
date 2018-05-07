@@ -14,7 +14,7 @@ import java.awt.event.AdjustmentListener;
 import java.awt.event.AdjustmentEvent;
 import java.awt.GridLayout;
 import java.awt.BorderLayout;
-
+import java.awt.Color;
 import java.awt.Font;
 
 class GameGUI implements Constants{
@@ -27,9 +27,8 @@ class GameGUI implements Constants{
 	private JTextArea chatArea,scoreArea,timerArea,wordArea;
 	private JScrollPane chatScrollPane;
 	private JTextField chatField,wordField,timerField;
-	private JButton sendButton;
+	private JButton sendButton,clearButton;
 	private BrushSettings brushSettings;
-	private JLabel joseLabel, wordToGuess;
 	
 
 	private static final int SCORE_AREA_ROWS = 10;
@@ -86,7 +85,6 @@ class GameGUI implements Constants{
 		this.scorePanel.add(scoreArea);
 		this.scorePanel.add(wordField);
 		this.scorePanel.add(timerField);
-		this.scorePanel.add(joseLabel);
 
 	}
 
@@ -110,7 +108,7 @@ class GameGUI implements Constants{
 		JButton clearBrush = new JButton(" ");
 		clearBrush.setBackground(Color.WHITE);
 		
-		JButton clearButton = new JButton("Clear canvas");
+		clearButton = new JButton("Clear canvas");
 		
 		smallBrush.addActionListener(new ActionListener() {
 
@@ -180,6 +178,7 @@ class GameGUI implements Constants{
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				// TODO Auto-generated method stub
+				gameClient.sendGameData(CLEAR_CANVAS_SIGNAL);
 				drawingArea.clear();
 			}
 			
@@ -291,9 +290,7 @@ class GameGUI implements Constants{
 		this.drawingArea.draw(oldX,oldY,newX,newY,brushSize);
 	}
 
-	public void showInWordField(String word){
-		this.wordToGuess.setText(word);
-	}
+
 
 	public void showInScoreList(String list){
 		this.scoreArea.setText(list);
@@ -309,6 +306,24 @@ class GameGUI implements Constants{
 
 	public void enableDrawingArea(){
 		this.drawingArea.enableDrawing();
+	}
+
+	public void showInWordField(String word) {
+		this.wordField.setText(word);
+		
+	}
+
+	public void clearCanvas() {
+		this.drawingArea.clear();
+		
+	}
+
+	public void enableClearing() {
+		clearButton.setEnabled(true);
+	}
+	
+	public void disableClearing() {
+		clearButton.setEnabled(false);
 	}
 
 }

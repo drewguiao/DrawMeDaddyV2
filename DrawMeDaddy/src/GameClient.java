@@ -142,8 +142,6 @@ public class GameClient implements Runnable,Constants{
 		this.handle(SERVER_PREFIX+"GAME OVER!\n\n"+"Final Scores:");
 		for(int i=0; i<(tokens.length+1)/2; i++)
 			this.handle(tokens[i]+": "+tokens[i+1]+"\n");
-		//for(int i=0; i<tokens.length; i++)
-		//	this.handle(i+" "+tokens[i]);
 	}
 
 	private void notifyEveryoneOfPlayerWhoGotTheWord(String receivedData){
@@ -183,8 +181,10 @@ public class GameClient implements Runnable,Constants{
 			this.gui.enableDrawingArea();
 			this.isArtist = true;
 			this.gui.enableClearing();
+			this.gui.enableControlPanel();
 		}else{
 			this.gui.disableDrawingArea();
+			this.gui.disableControlPanel();
 			this.isArtist = false;
 			this.gui.disableClearing();
 		}

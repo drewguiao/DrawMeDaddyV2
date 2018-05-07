@@ -7,8 +7,10 @@ public class TimerClass implements Runnable,Constants{
 	private int period = 1000;
 	private static final int MAX_TIME = 60;
 	private GameServerThread server;
+
 	private String word;
 	
+
 	public TimerClass(int seconds, GameServerThread server){
 		this.seconds = ++seconds;
 		this.server = server;
@@ -39,7 +41,6 @@ public class TimerClass implements Runnable,Constants{
 
 	@Override
 	public void run(){
-		Timer time = new Timer();
 		time.scheduleAtFixedRate(
 			new  TimerTask(){
 				public void run(){
@@ -74,9 +75,11 @@ public class TimerClass implements Runnable,Constants{
 	public void startViaThread(){
 		this.run();
 	}
-	
-	public int getTimePassed() {
-		return (MAX_TIME - this.seconds);
+
+
+
+	public void forceTimer(){
+		this.seconds = 1;
 	}
-	
+
 }

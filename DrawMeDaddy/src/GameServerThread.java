@@ -27,9 +27,10 @@ class GameServerThread extends Thread implements Constants{
 	private int numberOfStages = 0;
 	private double timeControllerDeclaration = 0.0000000000d;
 	private TimerClass stageTimer;
+	private int numberOfPlayersAnsweredCorrectly = 0;
 	private String randomWord;
 	private boolean isGuessingTime = false;
-	
+
 	public GameServerThread(GameServer gameServer){
 		this.gameServer = gameServer;
 		this.setUpServer();
@@ -77,6 +78,7 @@ class GameServerThread extends Thread implements Constants{
 							this.playersCache.clear();
 						}else{
 							this.numberOfStages++;
+							this.numberOfPlayersAnsweredCorrectly = 0;
 							this.gameStatus = PRE_STAGE;
 						}
 					}
@@ -108,10 +110,16 @@ class GameServerThread extends Thread implements Constants{
 	
 					
 					
+					
+
 					if(receivedData.startsWith(COORDINATE_SIGNAL)) this.broadCastCoordinateData(receivedData);
 					else if(receivedData.startsWith(CLEAR_CANVAS_SIGNAL)) this.broadcastCanvasClearing();
-					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)) this.broadcastCorrectPlayer(receivedData,stageTimer);
-					
+					else if(receivedData.startsWith(WORD_CORRECT_SIGNAL)){
+						this.broadcastCorrectPlayer(receivedData,stageTimer);
+						numberOfPlayersAnsweredCorrectly++;
+						if(numberOfPlayersAnsweredCorrectly == players.size()-1)
+							stageTimer.forceTimer();
+					}
 					if(timeControllerDeclaration != 0){
 						if(stageTimer != null && stageTimer.getCurrentTime() == 0){
 							this.gameStatus = PRE_ROUND;

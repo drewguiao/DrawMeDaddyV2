@@ -11,6 +11,7 @@ public interface Constants {
 	public static final String WORD_UPDATE_SIGNAL = "WORD";
 	public static final String WORD_CORRECT_SIGNAL = "CORRECT";
 	public static final String SCORE_LIST_SIGNAL = "SCORE";
+	public static final String FINAL_SCORE_LIST_SIGNAL = "FINAL_SCORE";
 	public static final String GOT_THE_WORD_SIGNAL = "NOTIFY_EVERYONE";
 	public static final String START_SIGNAL = "GAME NA DADDY";
 	public static final String WANTS_TO_START_SIGNAL = "WANTS_TO_START";

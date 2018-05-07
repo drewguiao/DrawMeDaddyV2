@@ -54,9 +54,10 @@ public class TimerClass implements Runnable,Constants{
 	}
 
 	
-	public void divideTime(int N){
+	public void divideTime(int numberOfPlayers){
+		int diminishingValue = seconds/numberOfPlayers;
 		if(seconds>0)
-			seconds = seconds/N;
+			seconds = seconds - diminishingValue;
 	}
 
 	private int decreaseSeconds(){
